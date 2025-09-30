@@ -5,8 +5,8 @@ import numpy as np
 height = 700
 width = 1000
 
-# Functions
 def pointing_event(event, x, y, flags, param):
+    ''' Mouse callback function to draw points and lines '''
     if event == cv2.EVENT_LBUTTONDOWN:
         cv2.circle(img, (x, y), 3, (0, 0, 255), -1)
         points.append((x, y))
