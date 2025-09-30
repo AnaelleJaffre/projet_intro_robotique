@@ -4,12 +4,13 @@ import matplotlib.pyplot as plt
 from shape_detection import *
 
 if __name__ == '__main__':
-    img = np.asarray(Image.open("sample_dark_red_line.png"))
+    img = np.asarray(Image.open("image_processing\sample_dark_red_line.png"))
     plt.imshow(img)
 
-    zones = zone_segment_by_height(img)
-    centers = [center_of_zone(img, *height_bounds) for height_bounds in zones]
-    x = [c[0] for c in centers]
-    y = [c[1] for c in centers]
+    line_follow_point = center_of_zone(img, 0, img.shape[0]-1)
+
+    x = [line_follow_point[0]]
+    y = [line_follow_point[1]]
+   
     plt.scatter(x, y)
     plt.show()
