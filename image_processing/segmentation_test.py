@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from shape_detection import *
 
 if __name__ == '__main__':
-    img = np.asarray(Image.open("./sample_dark_red_line.png"))
+    img = np.asarray(Image.open("sample_dark_red_line.png"))
     plt.imshow(img)
 
     zones = zone_segment_by_height(img)
