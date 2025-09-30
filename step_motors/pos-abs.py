@@ -1,8 +1,8 @@
 import numpy as np
 
 ## geometric parameters
-Rwheels = 10; #to be defined
-Drob = 10; #to be defined
+Rwheels = 25.85
+Drob = 117.2
 
 ## position
 XYTHETHA = [0,0,0] # movements along the Y axis 
