@@ -26,9 +26,10 @@ def vect_update():
 def update_odom():
 
     l,t = vect_update()
+
     XYTHETHA[2] += t
     X = XYTHETHA[0] + l*np.cos(XYTHETHA[2])
-    Y = XYTHETHA[1] + l*np.sin(XYTHETHA[2]);
+    Y = XYTHETHA[1] + l*np.sin(XYTHETHA[2])
 
     XYTHETHA[0] += X
     XYTHETHA[1] += Y
