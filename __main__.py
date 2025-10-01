@@ -44,7 +44,8 @@ if __name__ == '__main__':
         # Adjust point coordinates to original frame
         line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
         center_x = width // 2
-        offset = line_follow_point_global[0] - center_x
+        #???????
+        offset_angle = np.atan2(line_follow_point_global[1] )
 
         #Adjust motors
         
