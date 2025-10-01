@@ -9,7 +9,7 @@ from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, Y
 color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
 
-if __name__ == '__main__':
+def main():
     # Get Video Output
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
