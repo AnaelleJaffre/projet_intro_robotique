@@ -10,4 +10,5 @@ def setup_motors():
     dxl_io.set_wheel_mode([1,2])
     dxl_io.goto_postion(0,2)
     dxl_io.enable_torque([1,2])
+    return dxl_io
     
