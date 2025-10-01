@@ -34,7 +34,7 @@ def update_odom():
     XYTHETHA[0] += X
     XYTHETHA[1] += Y
 
-def get_odom()
+def get_odom():
     return(XYTHETHA)
 
 def call_motor_angle():

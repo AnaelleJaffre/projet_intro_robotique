@@ -29,17 +29,17 @@ def inv_kin(V,O):
     speedRight = 180/np.pi*V/Rwheels - Drob/(2*Rwheels)*O
     return([speedLeft,speedRight])
 
-def update_error_vector(current_pos: tuple[float,float], target_pos: tuple[float,float]):
+def update_error_vector(current_pos: tuple[float,float], target_pos: tuple[float,float]): #error vector
     eps_L = target_pos[0]-current_pos[0]
     eps_T = target_pos[1]-current_pos[1]
     return([eps_L,eps_T])
 
-def get_current_pos():
+def get_current_pos(): 
     X,Y,T = pos_abs.get_odom()
     L = np.sqrt(X*X+Y*Y)
     return([L,T])
 
-def set_speed(dxl_io,command: tuple[float,float]):
+def set_speed(dxl_io,command: tuple[float,float]): 
     if command[1]<0 :
         motorSpeedLeft = command[0]+command[1]
         motroSpeedRight =  command[0]-command[1]
