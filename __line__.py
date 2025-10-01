@@ -3,14 +3,11 @@ import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
 from step_motors.speed_handling import lower_speed
 from step_motors.setup import setup_motors, motors_speed
-from image_processing.opencv_inrange_camera_params import RED, YELLOW, BLUE
-from step_motors.goto import turn
+from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, YELLOW2, BLUE1, BLUE2, BROWN
 
-# Define red color thresholds in HSV
-red_lower1 = np.array([0, 100, 100])
-red_upper1 = np.array([10, 255, 255])
-red_lower2 = np.array([160, 100, 100])
-red_upper2 = np.array([180, 255, 255])
+
+color_order = [BLUE1,RED1,YELLOW1]
+current_color = 0
 
 if __name__ == '__main__':
     # Get Video Output
@@ -38,9 +35,14 @@ if __name__ == '__main__':
         roi = frame[row_position:row_position + strip_height, :]
         cv2.imshow("roi",roi)
         # Convert to HSV and threshold
+        
         frame_HSV = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
-        frame_threshold = cv2.inRange(frame_HSV, red_lower1, red_upper1) + \
-                         cv2.inRange(frame_HSV, red_lower2, red_upper2)
+        frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
+        #Brown detection
+        frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
+        if cv2.countNonZero(frame_brown) > 0:
+            current_color += 2
+            
         
         # Get center of zone
         line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
@@ -52,8 +54,10 @@ if __name__ == '__main__':
         offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
         print(offset_angle)
         #Adjust motors
-        turn(dxl_io, offset_angle)
-        #motors_speed(dxl_io,100)
+        
+        new_speed = lower_speed(offset_angle, 100)
+        
+        motors_speed(dxl_io, new_speed)
         
         
         # Break if q pressed
