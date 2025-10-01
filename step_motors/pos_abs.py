@@ -1,8 +1,8 @@
 import numpy as np
 
 ## geometric parameters
-Rwheels = 25.85*0.001; #wheel radius in m
-Drob = 117.2*0.001; #space between both wheels in m
+Rwheels = 25.85
+Drob = 117.2
 
 ## position
 XYTHETHA = [0,0,0] # movements along the Y axis 
