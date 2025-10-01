@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
@@ -11,6 +13,23 @@ s_color_order = "b", "r", "y"
 color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
 robot_poses = []
+
+
+class MappingSaver:
+
+    def __init__(self):
+        self.last_save = time.perf_counter()
+        self.robot_poses = []
+
+    def save(self, xy):
+        now = time.perf_counter()
+        if now - self.last_save > 1:
+            self.robot_poses.append((*xy, s_color_order[current_color]))
+            self.last_save = now
+
+
+mapping_saver = MappingSaver()
+
 
 def main():
     global current_color
@@ -35,11 +54,8 @@ def main():
         strip_height = 20
 
         # save current location in mapping for current color
-        robot_poses.append((
-            *pos_abs.get_odom()[:2],
-            s_color_order[current_color]
-        ))
-        
+        mapping_saver.save(pos_abs.get_odom()[:2])
+
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
         cv2.imshow("roi",roi)
