@@ -1,8 +1,8 @@
 import numpy as np
 
 ## geometric parameters
-Rwheels = 25.85
-Drob = 117.2
+Rwheels = 25.85*0.001; #wheel radius in m
+Drob = 117.2*0.001; #space between both wheels in m
 
 ## position
 XYTHETHA = [0,0,0] # movements along the Y axis 
@@ -33,6 +33,9 @@ def update_odom():
 
     XYTHETHA[0] += X
     XYTHETHA[1] += Y
+
+def get_odom()
+    return(XYTHETHA)
 
 def call_motor_angle():
     return(rawDataLeft, rawDataRight)
