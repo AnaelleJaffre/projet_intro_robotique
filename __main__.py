@@ -3,6 +3,7 @@ import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
 from step_motors.speed_handling import lower_speed
 from step_motors.setup import setup_motors, motors_speed
+from image_processing.opencv_inrange_camera_params import RED, YELLOW, BLUE
 
 # Define red color thresholds in HSV
 red_lower1 = np.array([0, 100, 100])
