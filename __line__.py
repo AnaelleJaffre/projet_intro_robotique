@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
 from step_motors import pos_abs
-from step_motors.speed_handling import lower_speed
+from step_motors.goto import turn
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, YELLOW2, BLUE1, BLUE2, BROWN
 from image_processing.shape_rendering import shape_rendering
@@ -68,9 +68,7 @@ def main():
         print(offset_angle)
         #Adjust motors
         
-        new_speed = lower_speed(offset_angle, 100)
-        
-        motors_speed(dxl_io, new_speed)
+        turn(dxl_io, offset_angle)
         
         
         # Break if q pressed
