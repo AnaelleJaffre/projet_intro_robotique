@@ -25,13 +25,13 @@ def center_of_zone(img, h_start, h_end):
         (h_end + h_start) / 2.
     ))
 
-
+    
 if __name__ == '__main__':
     # cap = cv.VideoCapture(2)
     win_name = "main"
     cv.namedWindow(win_name)
     # _, frame = cap.read()
-    frame = cv.imread("sample_dark_red_line.png") # height, width, dims (or colors)
+    frame = cv.imread("image_processing\sample_dark_red_line.png") # height, width, dims (or colors)
 
     frame_HSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
 
