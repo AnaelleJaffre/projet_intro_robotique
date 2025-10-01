@@ -4,7 +4,7 @@ from image_processing.shape_detection import center_of_zone_bis
 from step_motors.speed_handling import lower_speed
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, YELLOW2, BLUE1, BLUE2, BROWN
-
+from image_processing.shape_rendering import shape_rendering
 
 color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
@@ -63,6 +63,9 @@ def main():
         # Break if q pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+    
+    # Mapping
+    shape_rendering()
     
     cap.release()
     cv2.destroyAllWindows()

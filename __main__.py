@@ -9,7 +9,6 @@ modes = {
     ord('1'): __line__.main(),
     ord('2'): __goto__.main(),
     ord('3'): "launch odometry",
-    ord('4'): "launch mapping",
     ord('0'): None
 }
 
