@@ -1,7 +1,8 @@
-center = 0
+import numpy as np
 
 def lower_speed(angle, speed):
     """Lower the speed of the motors when the robot is turning sharply."""
+    angle = np.rad2deg(angle)
     left_speed = speed
     right_speed = speed
     # Turn right
@@ -14,4 +15,4 @@ def lower_speed(angle, speed):
         left_speed *=  1/angle
         right_speed = speed - angle**1.5
 
-    return [int(left_speed), int(right_speed)]
+    return [int(left_speed), int(-right_speed)]

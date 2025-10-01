@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     # Setup motors
     dxl_io = setup_motors()
-    motors_speed(dxl_io, 0)
+    motors_speed(dxl_io, 100)
     
     while True:
         ret, frame = cap.read()
@@ -30,12 +30,12 @@ if __name__ == '__main__':
         # ROI extraction
         height, width = frame.shape[:2]
         row_position = int(height * 0.3) 
-        strip_height = 50
+        strip_height = 20
         
         
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
-        
+        cv2.imshow("roi",roi)
         # Convert to HSV and threshold
         frame_HSV = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
         frame_threshold = cv2.inRange(frame_HSV, red_lower1, red_upper1) + \
@@ -50,9 +50,10 @@ if __name__ == '__main__':
     
         offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
         print(offset_angle)
-
         #Adjust motors
-        new_speed = lower_speed(offset_angle)
+        
+        new_speed = lower_speed(offset_angle, 100)
+        
         motors_speed(dxl_io, new_speed)
         
         

@@ -7,7 +7,7 @@ def motors_speed(dxl_io, speed):
         dxl_io.set_moving_speed({2:speed[1]})   
     else: 
         dxl_io.set_moving_speed({1:speed})
-        dxl_io.set_moving_speed({2:speed})
+        dxl_io.set_moving_speed({2:-speed})
     
 def setup_motors():
     ports = pypot.dynamixel.get_available_ports()
