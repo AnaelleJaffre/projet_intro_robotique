@@ -11,6 +11,24 @@ def zone_segment_by_height(img: cv.Mat):
     heights = [i for i in range(0, img_height, sep-1)]
     return [(heights[i] , heights[i+1]) for i in range(len(heights)-1)]
 
+def center_of_zone_bis(binary_image, start_row, end_row):
+    """Calculate center of detected region (placeholder - replace with your implementation)"""
+    # Find contours in the binary image
+    contours, _ = cv.findContours(binary_image, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    
+    if contours:
+        # Get the largest contour
+        largest_contour = max(contours, key=cv.contourArea)
+        M = cv.moments(largest_contour)
+        
+        if M["m00"] != 0:
+            cx = int(M["m10"] / M["m00"])
+            cy = int(M["m01"] / M["m00"])
+            return [cx, cy]
+    
+    # Default to center if no contours found
+    return [binary_image.shape[1] // 2, binary_image.shape[0] // 2]
+
 
 def center_of_zone(img, h_start, h_end):
     """compute center of zone using start and end zones"""
