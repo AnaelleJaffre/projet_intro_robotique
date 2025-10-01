@@ -15,9 +15,9 @@ def zone_segment_by_height(img: cv.Mat):
 def center_of_zone(img, h_start, h_end):
     """compute center of zone using start and end zones"""
     # for the end, we reverse the array, take the maximum, and compute its location
-    z_start = (np.argmin(img[h_start]), img.shape[1] - 1 - np.argmin(img[h_start][::-1]))
+    z_start = (np.argmax(img[h_start]), img.shape[1] - 1 - np.argmax(img[h_start][::-1]))
     z_start_center = np.min(z_start) + np.abs(z_start[0] - z_start[1]) / 2
-    z_end = (np.argmin(img[h_end]), img.shape[1] - 1 - np.argmin(img[h_end][::-1]))
+    z_end = (np.argmax(img[h_end]), img.shape[1] - 1 - np.argmax(img[h_end][::-1]))
     z_end_center = np.min(z_end) + np.abs(z_end[0] - z_end[1]) / 2
 
     return np.array((
