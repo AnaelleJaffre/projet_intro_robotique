@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
+from step_motors.speed_handling import lower_speed
+from step_motors.setup import setup_motors, motors_speed
 
 # Define red color thresholds in HSV
 red_lower1 = np.array([0, 100, 100])
@@ -15,9 +17,9 @@ if __name__ == '__main__':
         print("cam not opened")
         exit()
     
-    # For tracking history
-    trajectory = []
-    max_trajectory_points = 50
+    # Setup motors
+    dxl_io = setup_motors()
+    motors_speed(dxl_io, 0)
     
     while True:
         ret, frame = cap.read()
@@ -44,10 +46,13 @@ if __name__ == '__main__':
         # Adjust point coordinates to original frame
         line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
         center_x = width // 2
-        #???????
-        offset_angle = np.atan2(line_follow_point_global[1] )
+    
+        offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
+        print(offset_angle)
 
         #Adjust motors
+        new_speed = lower_speed(offset_angle)
+        motors_speed(dxl_io, new_speed)
         
         
         # Break if q pressed
