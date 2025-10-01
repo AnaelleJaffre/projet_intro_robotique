@@ -23,16 +23,16 @@ def consigneAbsolute(Xc,Yc,Tc): #move at the coordinates from the Origin
     Tc -= XYTHETHA[2]
     return(Xc,Yc,Tc)
 
-def goTo(Xc,Yc,Tc):
+def goTo(dxl_io, Xc,Yc,Tc):
     #convert to polar coordinates
     Lgoto = np.sqrt(Xc*Xc+Yc*Yc)
     Tgoto = np.arctan(Yc/Xc)
     #3 state movement 
-    turn(Tgoto)
-    move(Lgoto)
-    turn(Tc-Tgoto)
+    turn(dxl_io, Tgoto)
+    move(dxl_io,Lgoto)
+    turn(dxl_io, Tc-Tgoto)
 
-def turn(Angle):
+def turn(dxl_io, Angle):
     #rotation of the wheels
     consigne_motor = Drob/Rwheels * Angle
     #set constant angular speed in opposition to turn the base
@@ -44,9 +44,9 @@ def turn(Angle):
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
     dxl_io.set_moving_speed({adressMotorRight: 0})
 
-def move(Lenght):
+def move(dxl_io, Length):
     #rotation of the wheels
-    consigne_motor = 2/Rwheels * Lenght
+    consigne_motor = 2/Rwheels * Length
     #set constant angular speed to move the base
     dxl_io.set_moving_speed({adressMotorLeft: omegaMotorMove}) 
     dxl_io.set_moving_speed({adressMotorRight: omegaMotorMove})
