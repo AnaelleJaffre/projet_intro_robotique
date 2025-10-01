@@ -2,6 +2,12 @@ import numpy as np
 import time
 import pypot.dynamixel
 
+## DEBUG ##
+DEBUG = 1 # 1 to enable print 0 to deactivate
+def debug_print(message):
+    if DEBUG == 1:
+        print(message)
+
 ## geometric parameters
 Rwheels = 25.85*0.001; #wheel radius in m
 Drob = 117.2*0.001; #space between both wheels in m
@@ -10,8 +16,8 @@ Drob = 117.2*0.001; #space between both wheels in m
 adressMotorLeft = 1
 adressMotorRight = 2
 
-omegaMotorMove = 360 #angular speed in °/s (ie base moves )
-omegaMotorTurn = 202 #angular speed in °/s (ie base turns 90°/s )
+omegaMotorMove = 220 #angular speed in °/s (ie base moves 10 cm/s)
+omegaMotorTurn = 202 #angular speed in °/s (ie base turns 90 °/s )
 
 ## position rob
 XYTHETHA = [0,0,0] # movements along the Y axis 
@@ -25,33 +31,51 @@ def consigneAbsolute(Xc,Yc,Tc): #move at the coordinates from the Origin
 
 def goTo(dxl_io, Xc,Yc,Tc):
     #convert to polar coordinates
-    Lgoto = np.sqrt(Xc*Xc+Yc*Yc)
-    Tgoto = np.arctan(Yc/Xc)
+    debug_print("compute GoTo L&T")
+    Lgoto = np.sqrt(Xc*Xc+Yc*Yc) # Lgoto in m
+    Tgoto = 180/np.pi*np.arctan(Yc/Xc) #Tgoto in deg
+    debug_print(Lgoto)
+    debug_print(Tgoto)
     #3 state movement 
+    debug_print("oriente base")
     turn(dxl_io, Tgoto)
+    debug_print("move to")
     move(dxl_io,Lgoto)
+    debug_print("final orientation")
     turn(dxl_io, Tc-Tgoto)
 
 def turn(dxl_io, Angle):
     #rotation of the wheels
+    debug_print("compute consigne")
     consigne_motor = Drob/Rwheels * Angle
+    debug_print(consigne_motor)
     #set constant angular speed in opposition to turn the base
+    debug_print("set speed")
     dxl_io.set_moving_speed({adressMotorLeft: omegaMotorTurn}) 
     dxl_io.set_moving_speed({adressMotorRight: -omegaMotorTurn})
     #time = angle/angular_speed
+    debug_print("do for :")
+    debug_print(consigne_motor/omegaMotorTurn)
     time.sleep(consigne_motor/omegaMotorTurn)
     #stops the motors
+    debug_print("motor stop")
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
     dxl_io.set_moving_speed({adressMotorRight: 0})
 
 def move(dxl_io, Length):
     #rotation of the wheels
+    debug_print("compute consigne")
     consigne_motor = 2/Rwheels * Length
+    debug_print(consigne_motor)
     #set constant angular speed to move the base
+    debug_print("set speed")
     dxl_io.set_moving_speed({adressMotorLeft: omegaMotorMove}) 
     dxl_io.set_moving_speed({adressMotorRight: omegaMotorMove})
     #time = lenght/linear_speed
+    debug_print("do for :")
+    debug_print(consigne_motor/omegaMotorMove)
     time.sleep(consigne_motor/omegaMotorMove)
     #stops the motors
+    debug_print("motor stop")
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
     dxl_io.set_moving_speed({adressMotorLeft: 0})

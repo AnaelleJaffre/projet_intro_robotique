@@ -1,6 +1,10 @@
 import numpy as np
 import step_motors.goto as goto
 import step_motors.setup as setup
+## things to remember ##
+# distances in meters
+# angles in degrees
+
 
 if __name__ == '__main__':
    #Setup
