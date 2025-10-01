@@ -1,15 +1,19 @@
 import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
+from step_motors import pos_abs
 from step_motors.speed_handling import lower_speed
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, YELLOW2, BLUE1, BLUE2, BROWN
 from image_processing.shape_rendering import shape_rendering
 
+s_color_order = "b", "r", "y"
 color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
+robot_poses = []
 
 def main():
+    global current_color
     # Get Video Output
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
@@ -29,7 +33,12 @@ def main():
         height, width = frame.shape[:2]
         row_position = int(height * 0.3) 
         strip_height = 20
-        
+
+        # save current location in mapping for current color
+        robot_poses.append((
+            *pos_abs.get_odom()[:2],
+            s_color_order[current_color]
+        ))
         
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
@@ -41,7 +50,11 @@ def main():
         #Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
         if cv2.countNonZero(frame_brown) > 0:
-            current_color += 2
+            current_color += 1
+            if current_color == 3:
+                # finished doing all paths, stop robot
+                motors_speed(dxl_io, 0)
+                break
             
         
         # Get center of zone
