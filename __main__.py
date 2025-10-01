@@ -4,6 +4,7 @@ from image_processing.shape_detection import center_of_zone_bis
 from step_motors.speed_handling import lower_speed
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, YELLOW, BLUE
+from step_motors.goto import turn
 
 # Define red color thresholds in HSV
 red_lower1 = np.array([0, 100, 100])
@@ -51,10 +52,8 @@ if __name__ == '__main__':
         offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
         print(offset_angle)
         #Adjust motors
-        
-        new_speed = lower_speed(offset_angle, 100)
-        
-        motors_speed(dxl_io, new_speed)
+        turn(dxl_io, offset_angle)
+        #motors_speed(dxl_io,100)
         
         
         # Break if q pressed
