@@ -22,5 +22,6 @@ def setup_motors():
     dxl_io.set_moving_speed({2:0})
 
     return dxl_io
-    
-setup_motors()
+
+if __name__ == '__main__':
+    setup_motors()

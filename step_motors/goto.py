@@ -3,7 +3,7 @@ import time
 import pypot.dynamixel
 
 ## DEBUG ##
-DEBUG = 1 # 1 to enable print 0 to deactivate
+DEBUG = 0 # 1 to enable print 0 to deactivate
 def debug_print(message):
     if DEBUG == 1:
         print(message)
@@ -33,21 +33,21 @@ def goTo(dxl_io, Xc,Yc,Tc):
     #convert to polar coordinates
     debug_print("compute GoTo L&T")
     Lgoto = np.sqrt(Xc*Xc+Yc*Yc) # Lgoto in m
-    Tgoto = 180/np.pi*np.arctan(Yc/Xc) #Tgoto in deg
+    Tgoto = 180/np.pi*np.atan2(Yc,Xc) #Tgoto in deg
     debug_print(Lgoto)
     debug_print(Tgoto)
     #3 state movement 
-    debug_print("oriente base")
+    debug_print("============oriente base============")
     turn(dxl_io, Tgoto)
-    debug_print("move to")
+    debug_print("============move to============")
     move(dxl_io,Lgoto)
-    debug_print("final orientation")
+    debug_print("============final orientation============")
     turn(dxl_io, Tc-Tgoto)
 
 def turn(dxl_io, Angle):
     #rotation of the wheels
     debug_print("compute consigne")
-    consigne_motor = Drob/Rwheels * Angle
+    consigne_motor = Drob/(2*Rwheels) * Angle # in °
     debug_print(consigne_motor)
     #set constant angular speed in opposition to turn the base
     debug_print("set speed")
@@ -56,7 +56,7 @@ def turn(dxl_io, Angle):
     #time = angle/angular_speed
     debug_print("do for :")
     debug_print(consigne_motor/omegaMotorTurn)
-    time.sleep(consigne_motor/omegaMotorTurn)
+    time.sleep(abs(consigne_motor/omegaMotorTurn))
     #stops the motors
     debug_print("motor stop")
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
@@ -65,7 +65,7 @@ def turn(dxl_io, Angle):
 def move(dxl_io, Length):
     #rotation of the wheels
     debug_print("compute consigne")
-    consigne_motor = 2/Rwheels * Length
+    consigne_motor = 180/np.pi * Length / Rwheels # in °
     debug_print(consigne_motor)
     #set constant angular speed to move the base
     debug_print("set speed")
@@ -74,7 +74,7 @@ def move(dxl_io, Length):
     #time = lenght/linear_speed
     debug_print("do for :")
     debug_print(consigne_motor/omegaMotorMove)
-    time.sleep(consigne_motor/omegaMotorMove)
+    time.sleep(abs(consigne_motor/omegaMotorMove))
     #stops the motors
     debug_print("motor stop")
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 

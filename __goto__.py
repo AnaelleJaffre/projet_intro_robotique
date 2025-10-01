@@ -9,7 +9,7 @@ import step_motors.setup as setup
 if __name__ == '__main__':
    #Setup
    dxl_io = setup.setup_motors()
-   goto.goTo(dxl_io,1,1,90)
+   goto.goTo(dxl_io,-1,-1,90)
    
    #Close motors
    dxl_io.close()
