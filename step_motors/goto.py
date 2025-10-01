@@ -3,12 +3,11 @@ import time
 import pypot.dynamixel
 
 ## geometric parameters
-Rwheels = 10; #to be defined
-Drob = 10; #to be defined
+Rwheels = 25.85*0.001; #wheel radius in m
+Drob = 117.2*0.001; #space between both wheels in m
 
 ## position rob
 XYTHETHA = [0,0,0] # movements along the Y axis 
-
 
 def consigneAbsolute(Xc,Yc,Tc): #move at the coordinates from the Origin
     #compute vector for the base 
