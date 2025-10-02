@@ -71,7 +71,7 @@ def on_high_V_thresh_trackbar(val):
 
 
 parser = argparse.ArgumentParser(description='Code for Thresholding Operations using inRange tutorial.')
-parser.add_argument('--camera', help='Camera divide number.', default=2, type=int)
+parser.add_argument('--camera', help='Camera divide number.', default=0, type=int)
 args = parser.parse_args()
 cap = cv.VideoCapture(args.camera)
 cv.namedWindow(window_capture_name)

@@ -36,7 +36,6 @@ def main():
     global current_color
     # Get Video Output
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G')) # faster capture speed
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     if not cap.isOpened():
@@ -50,7 +49,8 @@ def main():
     while True:
         ret, frame = cap.read()
         if not ret:
-            break
+            print("could not fetch frame")
+            continue
         
         # ROI extraction
         height, width = frame.shape[:2]
@@ -99,4 +99,7 @@ def main():
     shape_rendering()
     
     cap.release()
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
