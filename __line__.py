@@ -79,23 +79,22 @@ def main():
                 #motors_speed(dxl_io, 0)
                 #break
         
-        # Get center of zone
-        center_of_zone = center_of_zone(frame_threshold)       
+        # Get center of zone    
         center = (frame.shape[1] / 2, frame.shape[0] / 2)
         vec = np.array(line_center) - np.array(center)
 
         #cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
         #cv2.imshow("frame", frame)
         # Error angle
-        offset_vector = center[1] - center_of_zone[1]
-        print(center_of_zone, center)
+        offset_vector = center[1] - line_center[1]
+        print(line_center, center)
         print(offset_vector)
 
         
         # Saving position for mapping
         # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
         robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
-        mapping_saver.save(robot_xy, center_of_zone, offset_vector)
+        mapping_saver.save(robot_xy, line_center, offset_vector)
         
         
         # Adjust motors
