@@ -111,7 +111,7 @@ def main():
         #print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
 
         # Adjust motors
-        turn_line(dxl_io, vec[0], CONSTANT_LINEAR_SPEED, K_cor=1.0)
+        turn_line(dxl_io, vec[0], K_cor=1.0, V0=CONSTANT_LINEAR_SPEED)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
