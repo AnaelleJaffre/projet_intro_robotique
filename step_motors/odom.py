@@ -1,4 +1,5 @@
 import numpy as np
+import threading
 
 ## geometric parameters
 Rwheels = 25.85*0.001; #wheel radius in m
@@ -35,6 +36,7 @@ def update_odom():
     XYTHETHA[1] += Y
 
 def get_odom():
+    update_odom()
     return(XYTHETHA)
 
 def call_motor_angle():

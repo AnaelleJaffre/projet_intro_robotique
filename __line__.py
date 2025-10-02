@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
-from step_motors import pos_abs
+from step_motors import odom
 from step_motors.goto import turn
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, YELLOW2, BLUE1, BLUE2, BROWN
@@ -36,7 +36,7 @@ def main():
 
         # save current location in mapping for current color
         robot_poses.append((
-            *pos_abs.get_odom()[:2],
+            *odom.get_odom()[:2],
             s_color_order[current_color]
         ))
         

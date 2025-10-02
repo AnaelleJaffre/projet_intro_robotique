@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import pypot.dynamixel
-import pos_abs
+import step_motors.odom as odom
 
 ## geometric parameters
 Rwheels = 25.85*0.001; #wheel radius in m
@@ -35,7 +35,7 @@ def update_error_vector(current_pos: tuple[float,float], target_pos: tuple[float
     return([eps_L,eps_T])
 
 def get_current_pos(): 
-    X,Y,T = pos_abs.get_odom()
+    X,Y,T = odom.get_odom()
     L = np.sqrt(X*X+Y*Y)
     return([L,T])
 
