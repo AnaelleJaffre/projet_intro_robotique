@@ -9,7 +9,7 @@ from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
 
-s_color_order = "b", "r", "y"
+s_color_order = "r", "b", "y"
 color_order = [RED, BLUE, YELLOW]
 current_color = 0
 robot_poses = []
@@ -62,7 +62,7 @@ def main():
         # ROI extraction
         height, width = frame.shape[:2]
         row_position = int(height * 0.3)
-        # strip_height = 20
+        strip_height = 100
 
         # save current location in mapping for current color
         mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
@@ -119,7 +119,8 @@ def main():
     shape_rendering()
     
     cap.release()
-    #cv2.destroyAllWindows()
+    print(robot_poses)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()
