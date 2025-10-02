@@ -35,8 +35,8 @@ def update_odom(f_ech,dxl_io):
 
     XYTHETHA[2] += t
     #projection from robot frame to world frame
-    X = XYTHETHA[0] + l*np.cos(XYTHETHA[2])
-    Y = XYTHETHA[1] + l*np.sin(XYTHETHA[2])
+    X = XYTHETHA[0] - l*np.sin(XYTHETHA[2])
+    Y = XYTHETHA[1] + l*np.cos(XYTHETHA[2])
 
     XYTHETHA[0] += X
     XYTHETHA[1] += Y
