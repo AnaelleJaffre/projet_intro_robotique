@@ -52,7 +52,7 @@ def turn(dxl_io, Angle):
     #set constant angular speed in opposition to turn the base
     debug_print("set speed")
     dxl_io.set_moving_speed({adressMotorLeft: omegaMotorTurn}) 
-    dxl_io.set_moving_speed({adressMotorRight: -omegaMotorTurn})
+    dxl_io.set_moving_speed({adressMotorRight: omegaMotorTurn})
     #time = angle/angular_speed
     debug_print("do for :")
     debug_print(consigne_motor/omegaMotorTurn)
@@ -70,7 +70,7 @@ def move(dxl_io, Length):
     #set constant angular speed to move the base
     debug_print("set speed")
     dxl_io.set_moving_speed({adressMotorLeft: omegaMotorMove}) 
-    dxl_io.set_moving_speed({adressMotorRight: omegaMotorMove})
+    dxl_io.set_moving_speed({adressMotorRight: -omegaMotorMove})
     #time = lenght/linear_speed
     debug_print("do for :")
     debug_print(consigne_motor/omegaMotorMove)
