@@ -22,8 +22,8 @@ omegaMotorTurn = 202 #angular speed in °/s (ie base turns 90 °/s )
 satisfactory_area = 0.01 #circle around target in m
 
 ## corr parameters
-K_lin =1 #Hz
-K_ang =1 #Hz
+K_lin =0.1 #Hz
+K_ang =0.1 #Hz
 
 lin_speed = 0
 ang_speed = 0
@@ -36,10 +36,11 @@ def inv_kin(V,O):
     return([speedLeft,speedRight])
 
 def turn_line(dxl_io, dY, K_cor, V0):
-    Omega = K_cor * dY
-    SL, SR = inv_kin(V0, Omega)
+    Omega = K_cor * dY #the more the gap the more the angular correction
+    Vlin = K_cor / dY #the more the gap the slower we go 
+    SL, SR = inv_kin(Vlin, Omega)
     dxl_io.set_moving_speed({adressMotorLeft: SL}) 
-    dxl_io.set_moving_speed({adressMotorRight: SR})    
+    dxl_io.set_moving_speed({adressMotorRight: -SR})    
 
 
 
