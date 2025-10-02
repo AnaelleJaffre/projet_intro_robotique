@@ -13,6 +13,7 @@ s_color_order = "b", "r", "y"
 color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
 robot_poses = []
+SAMPLING_FREQ = 0.016
 
 
 class MappingSaver:
@@ -57,16 +58,8 @@ def main():
         strip_height = 20
 
         # save current location in mapping for current color
-<<<<<<< HEAD
-        robot_poses.append((
-            *odom.get_odom()[:2],
-            s_color_order[current_color]
-        ))
-        
-=======
-        mapping_saver.save(pos_abs.get_odom()[:2])
+        mapping_saver.save(odom.get_odom(SAMPLING_FREQ, dxl_io)[:2])
 
->>>>>>> a4a7a327c53c3369b1600292a4e53424db20993a
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
         cv2.imshow("roi",roi)
