@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
 from step_motors import odom
-from step_motors.goto import turn
+from step_motors.goto import turn, turn_line
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
@@ -15,6 +15,7 @@ current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
 PIXEL_TO_MM = 0.3125  # 1 pixel = 0.3125 mm
+CONSTANT_LINEAR_SPEED = 100
 
 class MappingSaver:
 
@@ -48,7 +49,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    motors_speed(dxl_io, 100)
+    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -102,14 +103,7 @@ def main():
         print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
 
         # Adjust motors
-        turn(dxl_io, offset_angle)
-        
-        # Exit if 0 pressed
-        if cv2.waitKey(1) & 0xFF == ord('0'):
-            break
-
-        #turn(dxl_io, offset_angle)
-        turn(dxl_io, 180)
+        turn_line(dxl_io, lateral_error_pixels, CONSTANT_LINEAR_SPEED, K_cor=1.0)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:

@@ -2,6 +2,8 @@ import numpy as np
 import time
 import pypot.dynamixel
 
+from step_motors.goto2 import inv_kin
+
 ## DEBUG ##
 DEBUG = 0 # 1 to enable print 0 to deactivate
 def debug_print(message):
@@ -61,6 +63,19 @@ def turn(dxl_io, Angle):
     debug_print("motor stop")
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
     dxl_io.set_moving_speed({adressMotorRight: 0})
+
+def turn_line(dxl_io, dy, V0, K_cor):
+    """
+    Proportional controller changing rotational speed based on dy component of error to target
+    :param dxl_io : DXL motor
+    :param dy : y error to target
+    :param V0 : constant linear speed
+    :param K_cor : Proportional term
+    """
+    omega = K_cor * dy
+    [SL, SR] = inv_kin(V0, omega)
+    dxl_io.set_moving_speed({adressMotorLeft: SL})
+    dxl_io.set_moving_speed({adressMotorRight: SR})
 
 def move(dxl_io, Length):
     #rotation of the wheels
