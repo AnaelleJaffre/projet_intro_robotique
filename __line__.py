@@ -11,7 +11,7 @@ from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BRO
 from image_processing.shape_rendering import shape_rendering
 
 s_color_order = "r", "b", "y"
-color_order = [YELLOW, BLUE, RED]
+color_order = [BLUE, YELLOW, RED]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
@@ -50,7 +50,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -93,15 +93,16 @@ def main():
         print("dx",dx)
 
         # Saving position for mapping
-        # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
+        #lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
         #robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
-        mapping_saver.save(robot_xy, line_center, dx)
+        #mapping_saver.save(robot_xy, line_center, dx)
         
-        
+        #cv2.imshow('frame',frame_threshold)
         # Adjust motors
-        turn_line(dxl_io, dx, 5.0,  0.10) ##dx must be negative for the angular speed to be correct
+        turn_line(dxl_io, dx, 0.25,  0.08) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
+        #print("time: ", elapsed)
         if elapsed < SAMPLING_FREQ_MS:
             time.sleep(SAMPLING_FREQ_MS - elapsed)
 

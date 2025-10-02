@@ -22,7 +22,7 @@ def setup_motors():
     dxl_io.set_moving_speed({1:0})
     dxl_io.set_moving_speed({2:0})
     s = dxl_io.get_moving_speed([1, 2])
-    print(s)
+    #print(s)
     return dxl_io
 
 if __name__ == '__main__':

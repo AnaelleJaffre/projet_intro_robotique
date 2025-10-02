@@ -40,7 +40,8 @@ def turn_line(dxl_io, dY, K_cor, V0):
     Vlin = V0#the more the gap the slower we go
     SL, SR = inv_kin(Vlin, Omega)
     dxl_io.set_moving_speed({adressMotorLeft: SL}) 
-    dxl_io.set_moving_speed({adressMotorRight: -SR})    
+    dxl_io.set_moving_speed({adressMotorRight: -SR})  
+    print("Omega : ",Omega)  
 
 
 

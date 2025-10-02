@@ -17,9 +17,9 @@ def call_motor_angle(f_ech,dxl_io):
     #print(dxl_io.get_present_speed({adressMotorLeft})[0])
     rawDataLeft = dxl_io.get_present_speed({adressMotorLeft})[0] / f_ech
     rawDataRight = - dxl_io.get_present_speed({adressMotorRight})[0] /  f_ech
-    print("motor angle")
-    print(rawDataLeft)
-    print(rawDataRight)
+    #print("motor angle")
+    #print(rawDataLeft)
+    #print(rawDataRight)
     return(rawDataLeft, rawDataRight)
 
 #compute distance and angle change based on wheels variations
