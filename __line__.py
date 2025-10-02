@@ -49,7 +49,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -90,7 +90,7 @@ def main():
         
         # Get center of zone
         line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
-
+        print(line_follow_point)
         # Adjust point coordinates to original frame
         line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
         center_x = width // 2
@@ -106,7 +106,7 @@ def main():
         robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
         mapping_saver.save(robot_xy, offset_angle, lateral_error)
         
-        print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
+        #print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
 
         # Adjust motors
         turn_line(dxl_io, vec[0], CONSTANT_LINEAR_SPEED, K_cor=1.0)
@@ -114,6 +114,7 @@ def main():
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
             time.sleep(SAMPLING_FREQ_MS - elapsed)
+        
     
     # Mapping
     shape_rendering()
