@@ -7,5 +7,13 @@ import step_motors.setup as setup
 # distances in meters
 # angles in degrees
 
+f_ech = 100 #sampling frequency in Hz 
+
 
 if __name__ == '__main__':
+    #Setup
+    dxl_io = setup.setup_motors()
+    while True :
+        print(odom.get_odom(f_ech),dxl_io)
+        time.sleep(1/f_ech)
+    
