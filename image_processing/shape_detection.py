@@ -24,7 +24,7 @@ def center_of_zone(img):
         if M["m00"] != 0:
             cx = int(M["m10"] / M["m00"])
             cy = int(M["m01"] / M["m00"])
-            print("contour found")
+            debug_print("contour found")
             return [cx, cy]
         else:
             return [img.shape[1] // 2, img.shape[0] // 2]
@@ -66,7 +66,7 @@ def center_of_zone_butter(img):
     #
     # val_y2 = means[counter - 1] * X_STEP  # Gives the last white segment
 
-    print(f"({idx_first_max}, {idx_last_max})")
+    debug_print(f"({idx_first_max}, {idx_last_max})")
     center = ((idx_first_max + idx_last_max) * X_STEP/ 2, start)
 
     return center[0]
@@ -88,14 +88,14 @@ if __name__ == '__main__':
     from opencv_inrange_camera_params import BLUE
     frame_threshold = cv.inRange(frame_HSV, *BLUE)
 
-    print(center_of_zone_butter(frame_threshold))
+    debug_print(center_of_zone_butter(frame_threshold))
 
     line_center_zone_better = center_of_zone_butter(frame_threshold)
     center = frame.shape[0] / 2
     dx = center - line_center_zone_better
-    print(f"center: {center}")
-    print(f"line_center_zone_better: {line_center_zone_better}")
-    print(f"dx: {dx}")
+    debug_print(f"center: {center}")
+    debug_print(f"line_center_zone_better: {line_center_zone_better}")
+    debug_print(f"dx: {dx}")
 
     cv.imshow(win_name, frame_threshold)
     key = cv.waitKey()

@@ -10,6 +10,14 @@ from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
 
+## DEBUG ##
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+def debug_print(message):
+    if DEBUG:
+        print(message)
+
+
+
 s_color_order = "r", "b", "y"
 color_order = [YELLOW, BLUE, RED]
 current_color = 0
@@ -45,7 +53,7 @@ def main():
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     if not cap.isOpened():
-        print("cam not opened")
+        debug_print("cam not opened")
         exit()
     
     # Setup motors
@@ -57,7 +65,7 @@ def main():
 
         ret, frame = cap.read()
         if not ret:
-            print("could not fetch frame")
+            debug_print("could not fetch frame")
             continue
     
 
@@ -90,7 +98,7 @@ def main():
         #cv2.imshow("frame", frame)
         # Error angle
         dx = center - line_center_zone_better
-        print("dx",dx)
+        debug_print("dx",dx)
 
         # Saving position for mapping
         # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)

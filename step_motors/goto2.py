@@ -4,9 +4,9 @@ import pypot.dynamixel
 import step_motors.odom as odom
 
 ## DEBUG ##
-DEBUG = 1 # 1 to enable print 0 to deactivate
+DEBUG = 0 # 1 to enable print 0 to deactivate
 def debug_print(message):
-    if DEBUG == 1:
+    if DEBUG:
         print(message)
 
 ## geometric parameters

@@ -5,6 +5,13 @@ import __line__
 import __goto__
 import __odom__
 
+## DEBUG ##
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+def debug_print(message):
+    if DEBUG:
+        print(message)
+
+
 modes = {
     '1': __line__.main,
     '2': __goto__.main,
@@ -19,4 +26,4 @@ if __name__ == '__main__':
     if key in modes:
         modes[key]()
     
-    print("Exiting...")
+    debug_print("Exiting...")

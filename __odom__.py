@@ -8,6 +8,13 @@ import os
 # distances in meters
 # angles in degrees
 
+## DEBUG ##
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+def debug_print(message):
+    if DEBUG:
+        print(message)
+
+
 f_ech = 100 #sampling frequency in Hz 
 
 
@@ -21,7 +28,7 @@ def main():
 
         x, y, theta = odom.get_odom(f_ech, dxl_io)
 
-        print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
+        debug_print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         elapsed = time.perf_counter() - start
         if elapsed > 0.:
             time.sleep((1/f_ech) - elapsed)

@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 from shape_detection import *
 import cv2 as cv
 
+## DEBUG ##
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+def debug_print(message):
+    if DEBUG:
+        print(message)
+
+
+
 if __name__ == '__main__':
     img = cv.imread("./sample_dark_red_line.png")
     img = img[:, :, :3]
@@ -17,7 +25,7 @@ if __name__ == '__main__':
     centers = [center_of_zone(frame_threshold, *height_bounds) for height_bounds in zones]
     x = [c[0] for c in centers]
     y = [c[1] for c in centers]
-    print(centers)
+    debug_print(centers)
     plt.scatter(x, y)
 
     plt.show()

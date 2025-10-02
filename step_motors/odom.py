@@ -1,6 +1,15 @@
 import numpy as np
 import pypot.dynamixel
 
+
+
+## DEBUG ##
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+def debug_print(message):
+    if DEBUG:
+        print(message)
+
+
 ## geometric parameters
 Rwheels = 25.85*0.001; #wheel radius in m
 Drob = 117.2*0.001; #space between both wheels in m
@@ -14,12 +23,12 @@ XYTHETHA = [0,0,0] # movements along the Y axis
 
 #compute raw angle of each motors based on measured speed of the motors and the sampling frequency
 def call_motor_angle(f_ech,dxl_io):
-    #print(dxl_io.get_present_speed({adressMotorLeft})[0])
+    #debug_print(dxl_io.get_present_speed({adressMotorLeft})[0])
     rawDataLeft = dxl_io.get_present_speed({adressMotorLeft})[0] / f_ech
     rawDataRight = - dxl_io.get_present_speed({adressMotorRight})[0] /  f_ech
-    print("motor angle")
-    print(rawDataLeft)
-    print(rawDataRight)
+    debug_print("motor angle")
+    debug_print(rawDataLeft)
+    debug_print(rawDataRight)
     return(rawDataLeft, rawDataRight)
 
 #compute distance and angle change based on wheels variations
@@ -29,9 +38,9 @@ def vect_update(f_ech,dxl_io):
     #direct kinematics
     L = Rwheels/2 * (np.deg2rad(deltaRight)-np.deg2rad(deltaLeft))
     Tetha = Rwheels/Drob * (deltaRight+deltaLeft)
-    print("vect")
-    print(L)
-    print(Tetha)
+    debug_print("vect")
+    debug_print(L)
+    debug_print(Tetha)
     return (L, Tetha)
 
 #add change vector to previous position to get the base position in world frame

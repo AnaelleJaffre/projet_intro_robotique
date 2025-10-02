@@ -5,7 +5,7 @@ import pypot.dynamixel
 from step_motors.goto2 import inv_kin
 
 ## DEBUG ##
-DEBUG = 0 # 1 to enable print 0 to deactivate
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
 def debug_print(message):
     if DEBUG == 1:
         print(message)
