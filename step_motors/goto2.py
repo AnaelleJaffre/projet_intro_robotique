@@ -39,7 +39,7 @@ def turn_line(dxl_io, dY, K_cor, V0):
     Omega = K_cor * dY
     SL, SR = inv_kin(V0, Omega)
     dxl_io.set_moving_speed({adressMotorLeft: SL}) 
-    dxl_io.set_moving_speed({adressMotorRight: SR})    
+    dxl_io.set_moving_speed({adressMotorRight: -SR})    
 
 
 

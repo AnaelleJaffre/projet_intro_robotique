@@ -1,10 +1,11 @@
 import time
-
+import math
 import cv2
 import numpy as np
 from image_processing.shape_detection import  center_of_zone, zone_segment_by_height
 from step_motors import odom
-from step_motors.goto import turn, turn_line
+from step_motors.goto import turn
+from step_motors.goto import turn_line
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
@@ -49,7 +50,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -87,8 +88,8 @@ def main():
         #cv2.imshow("frame", frame)
         # Error angle
         offset_vector = center[1] - line_center[1]
-        print(line_center, center)
-        print(offset_vector)
+       
+        print("offset vector: ", offset_vector)
 
         
         # Saving position for mapping
@@ -98,7 +99,7 @@ def main():
         
         
         # Adjust motors
-        #turn_line(dxl_io, offset_vector, CONSTANT_LINEAR_SPEED, 0.0001)
+        turn_line(dxl_io, offset_vector/10000, CONSTANT_LINEAR_SPEED, 1.0)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
@@ -112,7 +113,6 @@ def main():
     shape_rendering()
     
     cap.release()
-    print(robot_poses)
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
