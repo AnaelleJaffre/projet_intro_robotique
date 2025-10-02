@@ -33,7 +33,7 @@ BLUE2 = (
     np.array([180, 161, 237]) # Highs
 )
 
-BROWN1 = ( 
+BROWN = ( 
     np.array([10, 10, 20]), # Lows
     np.array([20, 255, 200]) # Highs
 )
