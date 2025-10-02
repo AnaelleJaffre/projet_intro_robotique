@@ -13,3 +13,6 @@ def main():
    
    #Close motors
    dxl_io.close()
+
+if __name__ == '__main__':
+    main()

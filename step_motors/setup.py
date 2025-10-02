@@ -11,6 +11,7 @@ def motors_speed(dxl_io, speed):
     
 def setup_motors():
     ports = pypot.dynamixel.get_available_ports()
+    print(f"ports : {ports}")
     if not ports:
         exit('No port')
     dxl_io = pypot.dynamixel.DxlIO(ports[0])
@@ -20,7 +21,8 @@ def setup_motors():
     dxl_io.enable_torque([1,2])
     dxl_io.set_moving_speed({1:0})
     dxl_io.set_moving_speed({2:0})
-
+    s = dxl_io.get_moving_speed([1, 2])
+    print(s)
     return dxl_io
 
 if __name__ == '__main__':
