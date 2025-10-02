@@ -14,6 +14,8 @@ def main():
     #Setup
     dxl_io = setup.setup_motors()
     while True :
-        print(odom.get_odom(f_ech),dxl_io)
+        print(odom.get_odom(f_ech,dxl_io))
         time.sleep(1/f_ech)
     
+if __name__ == "__main__":
+    main()
