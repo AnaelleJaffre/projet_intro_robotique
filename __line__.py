@@ -4,8 +4,8 @@ import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone, zone_segment_by_height, center_of_zone_butter
 from step_motors import odom
-from step_motors.goto import turn
-from step_motors.goto import turn_line
+#from step_motors.goto import turn
+from step_motors.goto2 import turn_line
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
@@ -50,7 +50,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -89,7 +89,7 @@ def main():
         #cv2.imshow("frame", frame)
         # Error angle
         dx = center - line_center_zone_better
-        print(dx)
+        print("dx",dx)
 
         # Saving position for mapping
         # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
@@ -98,7 +98,7 @@ def main():
         
         
         # Adjust motors
-        turn_line(dxl_io, -dx, CONSTANT_LINEAR_SPEED,  1.0) #dx must be negative for the angular speed to be correct
+        turn_line(dxl_io, dx, 5.0,  0.10) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:

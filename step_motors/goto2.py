@@ -37,7 +37,7 @@ def inv_kin(V,O):
 
 def turn_line(dxl_io, dY, K_cor, V0):
     Omega = K_cor * dY #the more the gap the more the angular correction
-    Vlin = K_cor / dY #the more the gap the slower we go 
+    Vlin = V0#the more the gap the slower we go
     SL, SR = inv_kin(Vlin, Omega)
     dxl_io.set_moving_speed({adressMotorLeft: SL}) 
     dxl_io.set_moving_speed({adressMotorRight: -SR})    
