@@ -24,10 +24,12 @@ def center_of_zone(img):
         if M["m00"] != 0:
             cx = int(M["m10"] / M["m00"])
             cy = int(M["m01"] / M["m00"])
+            print("contour found")
             return [cx, cy]
         else:
             return [img.shape[1] // 2, img.shape[0] // 2]
     else:
+
         return [img.shape[1] // 2, img.shape[0] // 2]
     
 if __name__ == '__main__':

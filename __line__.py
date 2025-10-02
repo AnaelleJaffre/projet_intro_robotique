@@ -98,7 +98,7 @@ def main():
         
         
         # Adjust motors
-        turn_line(dxl_io, offset_vector, CONSTANT_LINEAR_SPEED, 1.0)
+        #turn_line(dxl_io, offset_vector, CONSTANT_LINEAR_SPEED, 0.0001)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
