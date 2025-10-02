@@ -9,8 +9,8 @@ def debug_print(message):
         print(message)
 
 ## geometric parameters
-Rwheels = 25.85*0.001; #wheel radius in m
-Drob = 117.2*0.001; #space between both wheels in m
+Rwheels = 25.85 * 0.001; #wheel radius in m
+Drob = 122 * 0.001; #space between both wheels in m
 
 # control parameters 
 adressMotorLeft = 1
@@ -47,7 +47,7 @@ def goTo(dxl_io, Xc,Yc,Tc):
 def turn(dxl_io, Angle):
     #rotation of the wheels
     debug_print("compute consigne")
-    consigne_motor = Drob/(2*Rwheels) * Angle # in °
+    consigne_motor = 1.025 * (1.0 * Drob)/(2.*Rwheels) * Angle # in °
     debug_print(consigne_motor)
     #set constant angular speed in opposition to turn the base
     debug_print("set speed")
@@ -78,4 +78,4 @@ def move(dxl_io, Length):
     #stops the motors
     debug_print("motor stop")
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
-    dxl_io.set_moving_speed({adressMotorLeft: 0})
+    dxl_io.set_moving_speed({adressMotorRight: 0})
