@@ -1,7 +1,11 @@
 import cv2 as cv
 import numpy as np
 
-from test_marking import debug_print
+## DEBUG ##
+DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+def debug_print(*args):
+    if DEBUG:
+        print(*args)
 
 width_part = 20
 height_part = 6
