@@ -89,19 +89,17 @@ def main():
                 #break
         
         # Get center of zone
-        center_of_zone = center_of_zone(frame_threshold)
-        # Adjust point coordinates to original frame
-        center_x = width // 2
+        center_of_zone = center_of_zone(frame_threshold)       
         center = (width / 2, height / 2)
         vec = np.array(line_center) - np.array(center)
 
         cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
         cv2.imshow("frame", frame)
         # Error angle
-        offset_vector = center_x - center_of_zone[0]
+        offset_vector = center[1] - center_of_zone[1]
 
         # Saving position for mapping
-        lateral_error_pixels = center_of_zone[0] - center_x
+        lateral_error_pixels = center_of_zone[0] - center[0]
         lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
         robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
         mapping_saver.save(robot_xy, center_of_zone, lateral_error)
