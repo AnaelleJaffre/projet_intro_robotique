@@ -28,7 +28,7 @@ class MappingSaver:
         if now - self.last_save > 1:
             corrected_x = xy[0] - lateral_error * np.sin(offset_angle)
             corrected_y = xy[1] + lateral_error * np.cos(offset_angle)
-            xy = (corrected_x, corrected_y)
+            xy = (corrected_x*1000, corrected_y*1000) # Convert to mm
 
             self.robot_poses.append((*xy, s_color_order[current_color]))
             self.last_save = now
