@@ -14,7 +14,7 @@ color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ = 0.016
-
+PIXEL_TO_MM = 0.5
 
 class MappingSaver:
 
@@ -22,9 +22,13 @@ class MappingSaver:
         self.last_save = time.perf_counter()
         self.robot_poses = []
 
-    def save(self, xy):
+    def save(self, xy, offset_angle=0, lateral_error=0):
         now = time.perf_counter()
         if now - self.last_save > 1:
+            corrected_x = xy[0] - lateral_error * np.sin(offset_angle)
+            corrected_y = xy[1] + lateral_error * np.cos(offset_angle)
+            xy = (corrected_x, corrected_y)
+
             self.robot_poses.append((*xy, s_color_order[current_color]))
             self.last_save = now
 
@@ -57,17 +61,15 @@ def main():
         row_position = int(height * 0.3) 
         strip_height = 20
 
-        # save current location in mapping for current color
-        mapping_saver.save(odom.get_odom(SAMPLING_FREQ, dxl_io)[:2])
-
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
-        cv2.imshow("roi",roi)
+        cv2.imshow("roi", roi)
+
         # Convert to HSV and threshold
-        
         frame_HSV = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
         frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
-        #Brown detection
+        
+        # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
         if cv2.countNonZero(frame_brown) > 0:
             current_color += 1
@@ -75,7 +77,6 @@ def main():
                 # finished doing all paths, stop robot
                 motors_speed(dxl_io, 0)
                 break
-            
         
         # Get center of zone
         line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
@@ -84,15 +85,23 @@ def main():
         line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
         center_x = width // 2
     
+        # Error angle
         offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
-        print(offset_angle)
-        #Adjust motors
+
+        # Saving position for mapping
+        lateral_error_pixels = line_follow_point_global[0] - center_x
+        lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
         
+        robot_xy = odom.get_odom(SAMPLING_FREQ, dxl_io)[:2]
+        mapping_saver.save(robot_xy, offset_angle, lateral_error)
+        
+        print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
+
+        # Adjust motors
         turn(dxl_io, offset_angle)
         
-        
-        # Break if q pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        # Exit if 0 pressed
+        if cv2.waitKey(1) & 0xFF == ord('0'):
             break
     
     # Mapping
