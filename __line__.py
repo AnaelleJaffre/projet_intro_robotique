@@ -40,7 +40,7 @@ mapping_saver = MappingSaver()
 def main():
     global current_color
     # Get Video Output
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     if not cap.isOpened():
