@@ -12,7 +12,7 @@ def main():
    #Setup
    dxl_io = setup.setup_motors()
    while True:
-      goto.asser([0.1,0.1,0],dxl_io)
+      goto.asserv([0.1,0.1,0],dxl_io)
       time.sleep(1/f_ech)
 
 if __name__ == '__main__':
