@@ -2,6 +2,7 @@ import numpy as np
 import time
 import step_motors.odom as odom
 import step_motors.setup as setup
+import os
 
 ## things to remember ##
 # distances in meters
@@ -15,7 +16,9 @@ def main():
     dxl_io = setup.setup_motors()
     dxl_io.disable_torque({1:0, 2:0})
     while True :
-        print(odom.get_odom(f_ech,dxl_io))
+        os.system('clear')
+        x, y, theta = odom.get_odom(f_ech, dxl_io)
+        print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         time.sleep(1/f_ech)
     
 if __name__ == "__main__":

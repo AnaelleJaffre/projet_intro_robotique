@@ -27,19 +27,49 @@ def center_of_zone_bis(binary_image, start_row, end_row):
     return [binary_image.shape[1] // 2, binary_image.shape[0] // 2]
 
 
-def center_of_zone(img, h_start, h_end):
+def center_of_zone(height, width):
     """compute center of zone using start and end zones"""
-    # for the end, we reverse the array, take the maximum, and compute its location
-    z_start = (np.argmax(img[h_start]), img.shape[1] - 1 - np.argmax(img[h_start][::-1]))
-    z_start_center = np.min(z_start) + np.abs(z_start[0] - z_start[1]) / 2
-    z_end = (np.argmax(img[h_end]), img.shape[1] - 1 - np.argmax(img[h_end][::-1]))
-    z_end_center = np.min(z_end) + np.abs(z_end[0] - z_end[1]) / 2
+    # # for the end, we reverse the array, take the maximum, and compute its location
+    # z_start = (np.argmax(img[h_start]), img.shape[1] - 1 - np.argmax(img[h_start][::-1]))
+    # z_start_center = np.min(z_start) + np.abs(z_start[0] - z_start[1]) / 2
+    # z_end = (np.argmax(img[h_end]), img.shape[1] - 1 - np.argmax(img[h_end][::-1]))
+    # z_end_center = np.min(z_end) + np.abs(z_end[0] - z_end[1]) / 2
 
-    return np.array((
-        (z_start_center + z_end_center) / 2,
-        (h_end + h_start) / 2.
-    ))
+    # return np.array((
+    #     (z_start_center + z_end_center) / 2,
+    #     (h_end + h_start) / 2.
+    # ))
 
+    x = height-40
+    y = 0
+    means = []
+    center = (height/2, width/2)
+
+    for i in range(0, width//10):
+        mean = compute_mean(x, y)
+        means.append(mean)
+        y += 10
+    
+    counter = 0
+    while means[counter] < 100:
+        counter += 1
+    
+    val_y1 = means[counter]*10 # Gives the first white segment
+
+    while means[counter] > 100:
+        counter += 1
+    
+    val_y2 = means[counter-1]*10 # Gives the last white segment
+
+    center = (x, (val_y1 + val_y2) / 2)
+
+    return center
+
+
+def compute_mean(x, y):
+    mean = 0
+
+    return mean
     
 if __name__ == '__main__':
     # cap = cv.VideoCapture(2)
