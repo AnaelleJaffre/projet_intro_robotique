@@ -3,7 +3,7 @@ import time
 import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone, zone_segment_by_height, center_of_zone_butter
-from step_motors import odom
+#from step_motors import odom
 #from step_motors.goto import turn
 from step_motors.goto2 import turn_line
 from step_motors.setup import setup_motors, motors_speed
@@ -62,7 +62,8 @@ def main():
     
 
         # save current location in mapping for current color
-        mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
+        #
+        #mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
 
         
         # Convert to HSV and threshold
@@ -93,7 +94,7 @@ def main():
 
         # Saving position for mapping
         # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
-        robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
+        #robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
         mapping_saver.save(robot_xy, line_center, dx)
         
         
