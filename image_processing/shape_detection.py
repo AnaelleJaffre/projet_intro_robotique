@@ -1,10 +1,7 @@
 import cv2 as cv
 import numpy as np
 
-NUM_ZONES = 15
-"""Number of zones used during zone segmentation"""
-
-def zone_segment_by_height(img: cv.Mat):
+def zone_segment_by_height(img: cv.Mat, NUM_ZONES: int):
     """Gives a list of tuple of indexes used to segment in NUM_ZONES the image"""
     img_height = img.shape[0]
     sep = int(img_height / NUM_ZONES)

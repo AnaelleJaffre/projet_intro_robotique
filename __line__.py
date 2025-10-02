@@ -2,9 +2,9 @@ import time
 
 import cv2
 import numpy as np
-from image_processing.shape_detection import center_of_zone_bis
+from image_processing.shape_detection import center_of_zone_bis, center_of_zone, zone_segment_by_height
 from step_motors import odom
-from step_motors.goto import turn
+from step_motors.goto import turn, turn_line
 from step_motors.setup import setup_motors, motors_speed
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
@@ -15,6 +15,7 @@ current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
 PIXEL_TO_MM = 0.3125  # 1 pixel = 0.3125 mm
+CONSTANT_LINEAR_SPEED = 100
 
 class MappingSaver:
 
@@ -48,7 +49,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    motors_speed(dxl_io, 100)
+    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -60,20 +61,24 @@ def main():
         
         # ROI extraction
         height, width = frame.shape[:2]
-        row_position = int(height * 0.3) 
+        row_position = int(height * 0.3)
         strip_height = 100
 
         # save current location in mapping for current color
         mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
 
         # Get the region of interest (ROI)
-        roi = frame[row_position:row_position + strip_height, :]
+        # roi = frame[row_position:row_position + strip_height, :]
         #cv2.imshow("roi",roi)
         
         # Convert to HSV and threshold
-        frame_HSV = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+        frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
-        
+
+        zones = zone_segment_by_height(frame_threshold, 4)
+        selected_height_bounds = zones[2]
+        line_center = center_of_zone(frame_threshold, *selected_height_bounds)
+
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
         #if cv2.countNonZero(frame_brown) > 0:
@@ -85,11 +90,13 @@ def main():
         
         # Get center of zone
         line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
-        
+
         # Adjust point coordinates to original frame
         line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
         center_x = width // 2
-    
+        center = (width / 2, height / 2)
+        vec = np.array(line_center) - np.array(center)
+
         # Error angle
         offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
 
@@ -102,14 +109,7 @@ def main():
         print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
 
         # Adjust motors
-        turn(dxl_io, offset_angle)
-        
-        # Exit if 0 pressed
-        if cv2.waitKey(1) & 0xFF == ord('0'):
-            break
-
-        #turn(dxl_io, offset_angle)
-        turn(dxl_io, 180)
+        turn_line(dxl_io, vec[0], CONSTANT_LINEAR_SPEED, K_cor=1.0)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
