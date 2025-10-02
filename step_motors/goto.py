@@ -6,9 +6,9 @@ from step_motors.goto2 import inv_kin
 
 ## DEBUG ##
 DEBUG = 0 # 1 to enable debug_print 0 to deactivate
-def debug_print(message):
+def debug_print(*args):
     if DEBUG == 1:
-        print(message)
+        print(*args)
 
 ## geometric parameters
 Rwheels = 25.85 * 0.001; #wheel radius in m

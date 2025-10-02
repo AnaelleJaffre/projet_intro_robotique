@@ -4,10 +4,10 @@ import pypot.dynamixel
 import step_motors.odom as odom
 
 ## DEBUG ##
-DEBUG = 0 # 1 to enable print 0 to deactivate
-def debug_print(message):
+DEBUG = 1 # 1 to enable print 0 to deactivate
+def debug_print(*args):
     if DEBUG:
-        print(message)
+        print(*args)
 
 ## geometric parameters
 Rwheels = 25.85*0.001; #wheel radius in m
@@ -30,18 +30,24 @@ ang_speed = 0
 last_ang_speed = 0
 
 
-def inv_kin(V,O):
-    speedLeft = 180/np.pi*V/Rwheels + Drob/(2*Rwheels)*O
-    speedRight = 180/np.pi*V/Rwheels - Drob/(2*Rwheels)*O
+def inv_kin(V,O): #V in m/s and O in °/s
+    speedLeft = 180/np.pi * V/Rwheels + Drob/(2*Rwheels)*O
+    speedRight = 180/np.pi * V/Rwheels - Drob/(2*Rwheels)*O
     return([speedLeft,speedRight])
 
+
+##
 def turn_line(dxl_io, dY, K_cor, V0):
     Omega = K_cor * dY #the more the gap the more the angular correction
     Vlin = V0#the more the gap the slower we go
+    debug_print("Omega ",Omega) 
+    debug_print("Vlin ", Vlin)
+
     SL, SR = inv_kin(Vlin, Omega)
+    debug_print("SL ", SL)
+    debug_print("SR ", SR)
     dxl_io.set_moving_speed({adressMotorLeft: SL}) 
     dxl_io.set_moving_speed({adressMotorRight: -SR})  
-    print("Omega : ",Omega)  
 
 
 

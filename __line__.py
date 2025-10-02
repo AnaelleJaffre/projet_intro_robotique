@@ -11,10 +11,10 @@ from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BRO
 from image_processing.shape_rendering import shape_rendering
 
 ## DEBUG ##
-DEBUG = 0 # 1 to enable debug_print 0 to deactivate
-def debug_print(message):
+DEBUG = 1 # 1 to enable debug_print 0 to deactivate
+def debug_print(*args):
     if DEBUG:
-        print(message)
+        print(*args)
 
 
 
@@ -98,7 +98,8 @@ def main():
         #cv2.imshow("frame", frame)
         # Error angle
         dx = center - line_center_zone_better
-        debug_print("dx",dx)
+        debug_print("dx")
+        debug_print(dx)
 
         # Saving position for mapping
         #lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
@@ -107,7 +108,7 @@ def main():
         
         #cv2.imshow('frame',frame_threshold)
         # Adjust motors
-        turn_line(dxl_io, dx, 0.25,  0.08) ##dx must be negative for the angular speed to be correct
+        turn_line(dxl_io, dx, 0.25,  0.1) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
         #print("time: ", elapsed)
@@ -119,10 +120,10 @@ def main():
         
     
     # Mapping
-    shape_rendering()
+    #shape_rendering()
     
     cap.release()
-    print(robot_poses)
+    debug_print(robot_poses)
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':

@@ -3,9 +3,9 @@ import time
 
 ## DEBUG ##
 DEBUG = 0 # 1 to enable debug_print 0 to deactivate
-def debug_print(message):
+def debug_print(*args):
     if DEBUG:
-        print(message)
+        print(*args)
 
 
 ports = pypot.dynamixel.get_available_ports()

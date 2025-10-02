@@ -10,9 +10,9 @@ import os
 
 ## DEBUG ##
 DEBUG = 0 # 1 to enable debug_print 0 to deactivate
-def debug_print(message):
+def debug_print(*args):
     if DEBUG:
-        print(message)
+        print(*args)
 
 
 f_ech = 100 #sampling frequency in Hz 
