@@ -64,7 +64,7 @@ def turn(dxl_io, Angle):
     dxl_io.set_moving_speed({adressMotorLeft: 0}) 
     dxl_io.set_moving_speed({adressMotorRight: 0})
 
-def turn_line(dxl_io, dy, V0, K_cor):
+def turn_line(dxl_io, dx, V0, K_cor):
     """
     Proportional controller changing rotational speed based on dy component of error to target
     :param dxl_io : DXL motor
@@ -72,10 +72,10 @@ def turn_line(dxl_io, dy, V0, K_cor):
     :param V0 : constant linear speed
     :param K_cor : Proportional term
     """
-    omega = K_cor * dy
+    omega = K_cor * dx
     [SL, SR] = inv_kin(V0, omega)
     dxl_io.set_moving_speed({adressMotorLeft: SL})
-    dxl_io.set_moving_speed({adressMotorRight: SR})
+    dxl_io.set_moving_speed({adressMotorRight: -SR})
 
 def move(dxl_io, Length):
     #rotation of the wheels

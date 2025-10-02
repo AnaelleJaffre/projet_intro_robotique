@@ -1,8 +1,8 @@
 import time
-import math
+
 import cv2
 import numpy as np
-from image_processing.shape_detection import  center_of_zone, zone_segment_by_height
+from image_processing.shape_detection import center_of_zone, zone_segment_by_height, center_of_zone_butter
 from step_motors import odom
 from step_motors.goto import turn
 from step_motors.goto import turn_line
@@ -50,7 +50,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -70,6 +70,7 @@ def main():
         frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
         
         line_center = center_of_zone(frame_threshold)
+        line_center_zone_better = center_of_zone_butter(frame_threshold)
 
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
@@ -80,26 +81,24 @@ def main():
                 #motors_speed(dxl_io, 0)
                 #break
         
-        # Get center of zone    
-        center = (frame.shape[1] / 2, frame.shape[0] / 2)
-        vec = np.array(line_center) - np.array(center)
+        # Get center of zone
+
+        center =  frame.shape[0] / 2
 
         #cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
         #cv2.imshow("frame", frame)
         # Error angle
-        offset_vector = center[1] - line_center[1]
-       
-        print("offset vector: ", offset_vector)
+        dx = center - line_center_zone_better
+        print(dx)
 
-        
         # Saving position for mapping
         # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
         robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
-        mapping_saver.save(robot_xy, line_center, offset_vector)
+        mapping_saver.save(robot_xy, line_center, dx)
         
         
         # Adjust motors
-        turn_line(dxl_io, offset_vector/10000, CONSTANT_LINEAR_SPEED, 1.0)
+        turn_line(dxl_io, -dx, CONSTANT_LINEAR_SPEED,  1.0) #dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
@@ -113,6 +112,7 @@ def main():
     shape_rendering()
     
     cap.release()
+    print(robot_poses)
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':

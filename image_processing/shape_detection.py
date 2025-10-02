@@ -31,19 +31,71 @@ def center_of_zone(img):
     else:
 
         return [img.shape[1] // 2, img.shape[0] // 2]
-    
+
+
+def center_of_zone_butter(img):
+    """compute center of zone using start and end zones"""
+    X_STEP = 10
+    Y_STEP = 6
+
+    height, width = img.shape
+    start = height - 40
+    end = height - 40 + Y_STEP
+
+    img_rows = img[start:end, :]
+
+    splits = np.hsplit(img_rows, width / X_STEP)
+    avgs = [np.mean(s) for s in splits]
+
+    idx_first_max = np.argmin(avgs)
+    idx_last_max = (len(avgs) - 1 - int(np.argmin(avgs[::-1])))
+
+    # for i in range(0, width // X_STEP):
+    #     mean = compute_mean(img, x, y)
+    #     means.append(mean)
+    #     x += X_STEP
+
+    # counter = 0
+    # while means[counter] < 100:
+    #     counter += 1
+
+    # val_y1 = means[counter] * X_STEP  # Gives the first white segment
+    #
+    # while means[counter] > 100:
+    #     counter += 1
+    #
+    # val_y2 = means[counter - 1] * X_STEP  # Gives the last white segment
+
+    print(f"({idx_first_max}, {idx_last_max})")
+    center = ((idx_first_max + idx_last_max) * X_STEP/ 2, start)
+
+    return center[0]
+
+
 if __name__ == '__main__':
-    # cap = cv.VideoCapture(2)
+    cap = cv.VideoCapture(2)
+    cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 240)
     win_name = "main"
     cv.namedWindow(win_name)
-    # _, frame = cap.read()
-    frame = cv.imread("image_processing\sample_dark_red_line.png") # height, width, dims (or colors)
+    _, frame = cap.read()
+    # frame = cv.imread("capture_camera.jpg") # height, width, dims (or colors)
 
     frame_HSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
 
-    lower = (0, 0, 0)
-    higher = (166, 255, 255)
-    frame_threshold = cv.inRange(frame_HSV, lower, higher)
+    # lower = (0, 0, 0)
+    # higher = (166, 255, 255)
+    from opencv_inrange_camera_params import BLUE
+    frame_threshold = cv.inRange(frame_HSV, *BLUE)
+
+    print(center_of_zone_butter(frame_threshold))
+
+    line_center_zone_better = center_of_zone_butter(frame_threshold)
+    center = frame.shape[0] / 2
+    dx = center - line_center_zone_better
+    print(f"center: {center}")
+    print(f"line_center_zone_better: {line_center_zone_better}")
+    print(f"dx: {dx}")
 
     cv.imshow(win_name, frame_threshold)
     key = cv.waitKey()
