@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 
+from test_marking import debug_print
+
 width_part = 20
 height_part = 6
 def zone_segment_by_height(img: cv.Mat, NUM_ZONES: int):
