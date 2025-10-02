@@ -10,10 +10,10 @@ from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, Y
 from image_processing.shape_rendering import shape_rendering
 
 s_color_order = "b", "r", "y"
-color_order = [BLUE1,RED1,YELLOW1]
+color_order = [RED1, BLUE1,YELLOW1]
 current_color = 0
 robot_poses = []
-SAMPLING_FREQ = 0.016
+SAMPLING_FREQ_MS = 0.016
 
 
 class MappingSaver:
@@ -47,6 +47,8 @@ def main():
     motors_speed(dxl_io, 100)
     
     while True:
+        t_start = time.perf_counter()
+
         ret, frame = cap.read()
         if not ret:
             print("could not fetch frame")
@@ -58,24 +60,23 @@ def main():
         strip_height = 20
 
         # save current location in mapping for current color
-        mapping_saver.save(odom.get_odom(SAMPLING_FREQ, dxl_io)[:2])
+        mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
 
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
-        cv2.imshow("roi",roi)
+        #cv2.imshow("roi",roi)
         # Convert to HSV and threshold
         
         frame_HSV = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
         frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
         #Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
-        if cv2.countNonZero(frame_brown) > 0:
-            current_color += 1
-            if current_color == 3:
+        #if cv2.countNonZero(frame_brown) > 0:
+            #current_color += 1
+            #if current_color == 3:
                 # finished doing all paths, stop robot
-                motors_speed(dxl_io, 0)
-                break
-            
+                #motors_speed(dxl_io, 0)
+                #break
         
         # Get center of zone
         line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
@@ -88,12 +89,16 @@ def main():
         print(offset_angle)
         #Adjust motors
         
-        turn(dxl_io, offset_angle)
-        
-        
+        #turn(dxl_io, offset_angle)
+        turn(dxl_io, 180)
+
+        elapsed = time.perf_counter() - t_start
+        if elapsed < SAMPLING_FREQ_MS:
+            time.sleep(SAMPLING_FREQ_MS - elapsed)
+
         # Break if q pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+        #    break
     
     # Mapping
     shape_rendering()
