@@ -14,8 +14,8 @@ XYTHETHA = [0,0,0] # movements along the Y axis
 
 #compute raw angle of each motors based on measured speed of the motors and the sampling frequency
 def call_motor_angle(f_ech,dxl_io):
-    rawDataLeft = dxl_io.read_speed({adressMotorLeft})*f_ech
-    rawDataRight = dxl_io.read_speed({adressMotorRight})*f_ech
+    rawDataLeft = dxl_io.get_present_speed({adressMotorLeft})[0]*f_ech
+    rawDataRight = dxl_io.get_present_speed({adressMotorRight})[0]*f_ech
     return(rawDataLeft, rawDataRight)
 
 #compute distance and angle change based on wheels variations
