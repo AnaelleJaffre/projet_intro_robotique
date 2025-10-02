@@ -4,6 +4,8 @@ from __future__ import print_function
 import cv2 as cv
 import argparse
 
+from image_processing.opencv_inrange_camera_params import RED
+
 max_value = 255
 max_value_H = 360 // 2
 low_H = 0
@@ -88,7 +90,8 @@ while True:
     if frame is None:
         break
     frame_HSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-    frame_threshold = cv.inRange(frame_HSV, (low_H, low_S, low_V), (high_H, high_S, high_V))
+    params = RED
+    frame_threshold = cv.inRange(frame_HSV, *params)
 
     cv.imshow(window_capture_name, frame)
     cv.imshow(window_detection_name, frame_threshold)

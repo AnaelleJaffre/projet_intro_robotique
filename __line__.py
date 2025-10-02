@@ -19,7 +19,7 @@ def debug_print(*args):
 
 
 s_color_order = "r", "b", "y"
-color_order = [BLUE, YELLOW, RED]
+color_order = [RED] # [BLUE, YELLOW, RED]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
