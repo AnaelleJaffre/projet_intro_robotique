@@ -2,7 +2,7 @@ import time
 
 import cv2
 import numpy as np
-from image_processing.shape_detection import center_of_zone_bis, center_of_zone, zone_segment_by_height
+from image_processing.shape_detection import  center_of_zone, zone_segment_by_height
 from step_motors import odom
 from step_motors.goto import turn, turn_line
 from step_motors.setup import setup_motors, motors_speed
@@ -28,7 +28,7 @@ class MappingSaver:
         if now - self.last_save > 1:
             corrected_x = xy[0] - lateral_error * np.sin(offset_angle)
             corrected_y = xy[1] + lateral_error * np.cos(offset_angle)
-            xy = (corrected_x, corrected_y)
+            xy = (corrected_x*1000, corrected_y*1000) # Convert to mm
 
             self.robot_poses.append((*xy, s_color_order[current_color]))
             self.last_save = now
@@ -40,7 +40,7 @@ mapping_saver = MappingSaver()
 def main():
     global current_color
     # Get Video Output
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     if not cap.isOpened():
@@ -77,7 +77,7 @@ def main():
 
         zones = zone_segment_by_height(frame_threshold, 4)
         selected_height_bounds = zones[2]
-        line_center = center_of_zone(frame_threshold, *selected_height_bounds)
+        line_center = center_of_zone(frame_threshold)
 
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
@@ -89,7 +89,7 @@ def main():
                 #break
         
         # Get center of zone
-        line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
+        line_follow_point = center_of_zone(frame_threshold)
         print(line_follow_point)
         # Adjust point coordinates to original frame
         line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
@@ -97,6 +97,8 @@ def main():
         center = (width / 2, height / 2)
         vec = np.array(line_center) - np.array(center)
 
+        cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
+        cv2.imshow("frame", frame)
         # Error angle
         offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
 
@@ -114,6 +116,9 @@ def main():
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
             time.sleep(SAMPLING_FREQ_MS - elapsed)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
         
     
     # Mapping
