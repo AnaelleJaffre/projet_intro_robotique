@@ -3,37 +3,24 @@ import numpy as np
 # Hue max : 360 // 2
 # Other max values : 255
 
-RED1 = (
-    np.array([24, 0, 70]), # Lows
-    np.array([171, 191, 255]) # Highs
+RED = (
+    np.array([0, 43, 131]), # Lows
+    np.array([20, 255, 255]) # Highs
 )
 
-RED2 = (
-    np.array([160, 100, 100]), # Lows
-    np.array([180, 255, 255]) # Highs
+YELLOW = (
+    np.array([26, 89, 76]), # Lows
+    np.array([30, 156, 255]) # Highs
 )
 
-YELLOW1 = (
-    np.array([90, 0, 90]), # Lows
-    np.array([180, 190, 255]) # Highs
-)
 
-YELLOW2 = (
-    np.array([90, 0, 90]), # Lows
-    np.array([180, 190, 255]) # Highs
-)
-
-BLUE1 = (
+BLUE = (
     np.array([0, 0, 73]), # Lows
     np.array([180, 161, 237]) # Highs
 )
 
-BLUE2 = (
-    np.array([0, 0, 73]), # Lows
-    np.array([180, 161, 237]) # Highs
-)
 
 BROWN = ( 
-    np.array([10, 10, 20]), # Lows
-    np.array([20, 255, 200]) # Highs
+    np.array([0, 0, 0]), # Lows
+    np.array([13, 129, 130]) # Highs
 )

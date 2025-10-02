@@ -5,7 +5,6 @@ import __line__
 import __goto__
 import __odom__
 
-# Convert to functions instead of texts
 modes = {
     '1': __line__.main,
     '2': __goto__.main,
