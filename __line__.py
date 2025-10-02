@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import numpy as np
 from image_processing.shape_detection import center_of_zone_bis
@@ -12,10 +14,30 @@ color_order = [BLUE1,RED1,YELLOW1]
 current_color = 0
 robot_poses = []
 
+
+class MappingSaver:
+
+    def __init__(self):
+        self.last_save = time.perf_counter()
+        self.robot_poses = []
+
+    def save(self, xy):
+        now = time.perf_counter()
+        if now - self.last_save > 1:
+            self.robot_poses.append((*xy, s_color_order[current_color]))
+            self.last_save = now
+
+
+mapping_saver = MappingSaver()
+
+
 def main():
     global current_color
     # Get Video Output
     cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G')) # faster capture speed
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     if not cap.isOpened():
         print("cam not opened")
         exit()
@@ -35,11 +57,16 @@ def main():
         strip_height = 20
 
         # save current location in mapping for current color
+<<<<<<< HEAD
         robot_poses.append((
             *odom.get_odom()[:2],
             s_color_order[current_color]
         ))
         
+=======
+        mapping_saver.save(pos_abs.get_odom()[:2])
+
+>>>>>>> a4a7a327c53c3369b1600292a4e53424db20993a
         # Get the region of interest (ROI)
         roi = frame[row_position:row_position + strip_height, :]
         cv2.imshow("roi",roi)
