@@ -16,10 +16,15 @@ def main():
     dxl_io = setup.setup_motors()
     dxl_io.disable_torque({1:0, 2:0})
     while True :
+        start = time.perf_counter()
         os.system('clear')
+
         x, y, theta = odom.get_odom(f_ech, dxl_io)
+
         print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
-        time.sleep(1/f_ech)
-    
+        elapsed = time.perf_counter() - start
+        if elapsed > 0.:
+            time.sleep((1/f_ech) - elapsed)
+
 if __name__ == "__main__":
     main()
