@@ -10,7 +10,7 @@ from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BRO
 from image_processing.shape_rendering import shape_rendering
 
 s_color_order = "r", "b", "y"
-color_order = [RED, BLUE, YELLOW]
+color_order = [YELLOW, BLUE, RED]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
@@ -58,25 +58,16 @@ def main():
         if not ret:
             print("could not fetch frame")
             continue
-        
-        # ROI extraction
-        height, width = frame.shape[:2]
-        row_position = int(height * 0.3)
-        strip_height = 100
+    
 
         # save current location in mapping for current color
         mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
 
-        # Get the region of interest (ROI)
-        # roi = frame[row_position:row_position + strip_height, :]
-        #cv2.imshow("roi",roi)
         
         # Convert to HSV and threshold
         frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
-
-        zones = zone_segment_by_height(frame_threshold, 4)
-        selected_height_bounds = zones[2]
+        
         line_center = center_of_zone(frame_threshold)
 
         # Brown detection
@@ -90,24 +81,25 @@ def main():
         
         # Get center of zone
         center_of_zone = center_of_zone(frame_threshold)       
-        center = (width / 2, height / 2)
+        center = (frame.shape[1] / 2, frame.shape[0] / 2)
         vec = np.array(line_center) - np.array(center)
 
-        cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
-        cv2.imshow("frame", frame)
+        #cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
+        #cv2.imshow("frame", frame)
         # Error angle
         offset_vector = center[1] - center_of_zone[1]
+        print(center_of_zone, center)
+        print(offset_vector)
 
-        # Saving position for mapping
-        lateral_error_pixels = center_of_zone[0] - center[0]
-        lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
-        robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
-        mapping_saver.save(robot_xy, center_of_zone, lateral_error)
         
-        #print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
-
+        # Saving position for mapping
+        # lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
+        robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
+        mapping_saver.save(robot_xy, center_of_zone, offset_vector)
+        
+        
         # Adjust motors
-        turn_line(dxl_io, offset_vector, K_cor=1.0, V0=CONSTANT_LINEAR_SPEED)
+        turn_line(dxl_io, offset_vector, CONSTANT_LINEAR_SPEED, 1.0)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
