@@ -111,7 +111,7 @@ def main():
         turn_line(dxl_io, dx, 0.25,  0.1) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
-        #print("time: ", elapsed)
+        print("time: ", elapsed)
         if elapsed < SAMPLING_FREQ_MS:
             time.sleep(SAMPLING_FREQ_MS - elapsed)
 
