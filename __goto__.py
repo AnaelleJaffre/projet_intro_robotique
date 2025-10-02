@@ -6,7 +6,7 @@ import step_motors.setup as setup
 # angles in degrees
 
 
-if __name__ == '__main__':
+def main():
    #Setup
    dxl_io = setup.setup_motors()
    goto.goTo(dxl_io,1,1,90)
