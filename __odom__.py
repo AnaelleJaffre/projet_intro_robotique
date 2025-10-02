@@ -10,7 +10,7 @@ import step_motors.setup as setup
 f_ech = 100 #sampling frequency in Hz 
 
 
-if __name__ == '__main__':
+def main():
     #Setup
     dxl_io = setup.setup_motors()
     while True :
