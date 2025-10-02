@@ -2,7 +2,7 @@ import time
 
 import cv2
 import numpy as np
-from image_processing.shape_detection import center_of_zone_bis, center_of_zone, zone_segment_by_height
+from image_processing.shape_detection import  center_of_zone, zone_segment_by_height
 from step_motors import odom
 from step_motors.goto import turn, turn_line
 from step_motors.setup import setup_motors, motors_speed
@@ -40,7 +40,7 @@ mapping_saver = MappingSaver()
 def main():
     global current_color
     # Get Video Output
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     if not cap.isOpened():
@@ -77,7 +77,7 @@ def main():
 
         zones = zone_segment_by_height(frame_threshold, 4)
         selected_height_bounds = zones[2]
-        line_center = center_of_zone(frame_threshold, *selected_height_bounds)
+        line_center = center_of_zone(frame_threshold)
 
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
@@ -89,31 +89,32 @@ def main():
                 #break
         
         # Get center of zone
-        line_follow_point = center_of_zone_bis(frame_threshold, 0, frame_threshold.shape[0]-1)
-        print(line_follow_point)
-        # Adjust point coordinates to original frame
-        line_follow_point_global = [line_follow_point[0], line_follow_point[1] + row_position]
-        center_x = width // 2
+        center_of_zone = center_of_zone(frame_threshold)       
         center = (width / 2, height / 2)
         vec = np.array(line_center) - np.array(center)
 
+        cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
+        cv2.imshow("frame", frame)
         # Error angle
-        offset_angle = np.atan2(line_follow_point_global[1] - center_x, line_follow_point_global[0] - center_x)
+        offset_vector = center[1] - center_of_zone[1]
 
         # Saving position for mapping
-        lateral_error_pixels = line_follow_point_global[0] - center_x
+        lateral_error_pixels = center_of_zone[0] - center[0]
         lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
         robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
-        mapping_saver.save(robot_xy, offset_angle, lateral_error)
+        mapping_saver.save(robot_xy, center_of_zone, lateral_error)
         
         #print(f"Angle: {offset_angle:.2f}, Lateral error: {lateral_error:.2f}")
 
         # Adjust motors
-        turn_line(dxl_io, vec[0], CONSTANT_LINEAR_SPEED, K_cor=1.0)
+        turn_line(dxl_io, offset_vector, K_cor=1.0, V0=CONSTANT_LINEAR_SPEED)
 
         elapsed = time.perf_counter() - t_start
         if elapsed < SAMPLING_FREQ_MS:
             time.sleep(SAMPLING_FREQ_MS - elapsed)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
         
     
     # Mapping
