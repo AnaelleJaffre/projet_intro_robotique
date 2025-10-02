@@ -6,11 +6,11 @@ from image_processing.shape_detection import center_of_zone_bis
 from step_motors import odom
 from step_motors.goto import turn
 from step_motors.setup import setup_motors, motors_speed
-from image_processing.opencv_inrange_camera_params import RED1, RED2, YELLOW1, YELLOW2, BLUE1, BLUE2, BROWN
+from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
 
 s_color_order = "b", "r", "y"
-color_order = [RED1, BLUE1,YELLOW1]
+color_order = [RED, BLUE, YELLOW]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
