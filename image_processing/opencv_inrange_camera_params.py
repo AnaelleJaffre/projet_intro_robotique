@@ -4,23 +4,23 @@ import numpy as np
 # Other max values : 255
 
 RED = (
-    np.array([0, 43, 131]), # Lows
-    np.array([20, 255, 255]) # Highs
+    np.array([0, 152, 155]), # Lows
+    np.array([7, 200, 236]) # Highs
 )
 
 YELLOW = (
-    np.array([26, 89, 76]), # Lows
-    np.array([30, 156, 255]) # Highs
+    np.array([37, 0, 86]), # Lows
+    np.array([115, 37, 183]) # Highs
 )
 
 
 BLUE = (
-    np.array([0, 0, 73]), # Lows
-    np.array([180, 161, 237]) # Highs
+    np.array([20, 0, 109]), # Lows
+    np.array([121, 192, 175]) # Highs
 )
 
 
 BROWN = ( 
-    np.array([0, 0, 0]), # Lows
-    np.array([13, 129, 130]) # Highs
+    np.array([0, 69, 67]), # Lows
+    np.array([82, 151, 144]) # Highs
 )

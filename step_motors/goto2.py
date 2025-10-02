@@ -29,6 +29,14 @@ def inv_kin(V,O):
     speedRight = 180/np.pi*V/Rwheels - Drob/(2*Rwheels)*O
     return([speedLeft,speedRight])
 
+def turn_line(dxl_io, dY, K_cor, V0):
+    Omega = K_cor * dY
+    SL, SR = inv_kin(V0, Omega)
+    dxl_io.set_moving_speed({adressMotorLeft: SL}) 
+    dxl_io.set_moving_speed({adressMotorRight: SR})    
+
+
+
 def update_error_vector(current_pos: tuple[float,float], target_pos: tuple[float,float]): #error vector
     eps_L = target_pos[0]-current_pos[0]
     eps_T = target_pos[1]-current_pos[1]
@@ -40,14 +48,8 @@ def get_current_pos():
     return([L,T])
 
 def set_speed(dxl_io,command: tuple[float,float]): 
-    if command[1]<0 :
-        motorSpeedLeft = command[0]+command[1]
-        motroSpeedRight =  command[0]-command[1]
-    else :
-        motorSpeedLeft = command[0]-command[1]
-        motroSpeedRight =  command[0]+command[1]
-    dxl_io.set_moving_speed({adressMotorLeft: motorSpeedLeft}) 
-    dxl_io.set_moving_speed({adressMotorRight: motroSpeedRight})
+    dxl_io.set_moving_speed({adressMotorLeft: command[0]}) 
+    dxl_io.set_moving_speed({adressMotorRight: command[1]})
 
 def set_command(error_vector_pos: tuple[float,float],final_angle):
     lin_speed += K_lin * error_vector_pos[0]
@@ -57,7 +59,8 @@ def set_command(error_vector_pos: tuple[float,float],final_angle):
         set_speed([lin_command, ang_command])
     else:
         last_ang_speed += K_ang * (final_angle - error_vector_pos[1])% 360
-        set_speed([0,last_ang_speed])
+        lin_command, ang_command = inv_kin(0,last_ang_speed)
+        set_speed([lin_command,ang_command])
 
 def asserv(target_pos: tuple[float,float,float]):
     err_vect = update_error_vector(get_current_pos(),target_pos)
