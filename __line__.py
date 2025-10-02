@@ -14,7 +14,7 @@ color_order = [RED1, BLUE1,YELLOW1]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
-PIXEL_TO_MM = 0.5
+PIXEL_TO_MM = 0.3125  # 1 pixel = 0.3125 mm
 
 class MappingSaver:
 
@@ -107,7 +107,7 @@ def main():
         # Exit if 0 pressed
         if cv2.waitKey(1) & 0xFF == ord('0'):
             break
-        
+
         #turn(dxl_io, offset_angle)
         turn(dxl_io, 180)
 
