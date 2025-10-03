@@ -80,6 +80,8 @@ def main():
 
     signal.signal(signal.SIGINT, stop_motors)
 
+    start_time = time.perf_counter()
+
     #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
@@ -131,6 +133,12 @@ def main():
         print("time: ", elapsed)
         if elapsed < SAMPLING_FREQ_MS:
             time.sleep(SAMPLING_FREQ_MS - elapsed)
+
+        elapsed_total = time.perf_counter() - start_time
+        if elapsed_total > 15:
+            print("15s → mapping")
+            shape_rendering(mapping_saver.robot_poses)
+            break 
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
