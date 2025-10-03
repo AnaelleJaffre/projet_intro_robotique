@@ -10,7 +10,7 @@ import sys
 ## things to remember ##
 # distances in meters
 # angles in degrees
-mode = 0 ##if mode = 0 then raw angle is tethaK-tethaK-1 if mode = 1 raw angle is omegaMot/f
+mode = 1 ##if mode = 0 then raw angle is tethaK-tethaK-1 if mode = 1 raw angle is omegaMot/f
 f_ech = 10 #work frequency in Hz
 
 def main():

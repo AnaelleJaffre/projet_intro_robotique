@@ -35,7 +35,7 @@ def call_motor_angle(f_ech,dxl_io, mode):
     else :
         global previous
         rawDataLeft = dxl_io.get_present_position({adressMotorLeft})[0] - previous[0]
-        rawDataRight = dxl_io.get_present_position({adressMotorLeft})[1] - previous[1]
+        rawDataRight = dxl_io.get_present_position({adressMotorLeft})[0] - previous[1]
         return(rawDataLeft, - rawDataRight)
 
 #compute distance and angle change based on wheels variations
