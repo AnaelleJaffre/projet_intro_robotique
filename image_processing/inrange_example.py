@@ -4,7 +4,7 @@ from __future__ import print_function
 import cv2 as cv
 import argparse
 
-from image_processing.opencv_inrange_camera_params import RED
+from opencv_inrange_camera_params import RED
 
 max_value = 255
 max_value_H = 360 // 2
