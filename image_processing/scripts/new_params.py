@@ -1,21 +1,19 @@
-import numpy as np
-
-RED = (
+NEW_RED = (
     (0, 140, 0),
     (180, 181, 198)
 )
 
-BLUE = (
+NEW_BLUE = (
     (94, 53, 236),
     (109, 255, 255)
 )
 
-YELLOW= (
+NEW_YELLOW= (
     (7, 9, 0),
     (53, 149, 255)
 )
 
-BROWN = (
+NEW_BROWN = (
     (61, 5, 73),
     (180, 66, 141)
 )
