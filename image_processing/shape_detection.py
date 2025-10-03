@@ -84,7 +84,9 @@ if __name__ == '__main__':
     cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, 240)
     win_name = "main"
+    win_name_ogframe = "ogframe"
     cv.namedWindow(win_name)
+    cv.namedWindow(win_name_ogframe)
     _, frame = cap.read()
     # frame = cv.imread("capture_camera.jpg") # height, width, dims (or colors)
 
@@ -92,8 +94,8 @@ if __name__ == '__main__':
 
     # lower = (0, 0, 0)
     # higher = (166, 255, 255)
-    from opencv_inrange_camera_params import RED
-    frame_threshold = cv.inRange(frame_HSV, *RED)
+    from opencv_inrange_camera_params import BLUE
+    frame_threshold = cv.inRange(frame_HSV, *BLUE)
 
     debug_print(center_of_zone_butter(frame_threshold))
 
@@ -105,6 +107,7 @@ if __name__ == '__main__':
     debug_print(f"dx: {dx}")
 
     frame_threshold = cv.circle(frame_threshold, (int(line_center_zone_better), 240 - 40), 5, (0, 255, 0), 1)
+    cv.imshow(win_name_ogframe, frame)
     cv.imshow(win_name, frame_threshold)
     key = cv.waitKey()
 

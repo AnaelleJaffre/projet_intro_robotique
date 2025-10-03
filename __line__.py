@@ -104,7 +104,7 @@ def main():
         debug_print(f"dx : {dx}")
 
         # Saving position for mapping
-        robot_xy = get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
+        robot_xy = get_odom(SAMPLING_FREQ_MS, dxl_io, mode=1)[:2]
         mapping_saver.save(robot_xy, line_center_zone_better, dx)
         
         # cv2.imshow('frame',frame_threshold)
