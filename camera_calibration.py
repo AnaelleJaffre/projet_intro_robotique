@@ -1,8 +1,8 @@
 import numpy as np
 import cv2
-from new_params import NEW_BLUE, NEW_RED, NEW_YELLOW, NEW_BROWN
+from image_processing.new_params import NEW_BLUE, NEW_RED, NEW_YELLOW, NEW_BROWN
 
-def calibrate_color_threshold(cap, preset_low, preset_high, num_samples=30, adjustment_range=10):
+def calibrate_color_threshold(cap, preset_low, preset_high, num_samples=50, adjustment_range=10):
     """
     Calibrates color thresholds to maximize line detection under current lighting.
     
