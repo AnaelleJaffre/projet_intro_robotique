@@ -86,12 +86,12 @@ def main():
         line_center_zone_better = center_of_zone_butter(frame_threshold)
 
         # Brown detection
-        frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
+        frame_brown = cv2.inRange(frame_HSV, NEW_BROWN[0], NEW_BROWN[1])
         
         
-        if(brown_detection(frame_brown, threshold=100)):
+        if(brown_detection(frame_brown, threshold=270)):
             current_color = (current_color + 1)
-            debug_print(f"Brown detected, current color: {s_color_order[current_color]}")
+            debug_print(f"Brown detected, current color: {current_color}")
             if current_color == len(color_order):
                 break
             
@@ -130,7 +130,7 @@ def main():
     # Cleanup
     dxl_io.set_moving_speed({1:0, 2:0})
     cap.release()
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()

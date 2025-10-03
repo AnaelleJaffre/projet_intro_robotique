@@ -22,20 +22,14 @@ adressMotorRight = 2
 XYTHETHA = [0,0,0] # movements along the Y axis 
 
 #compute raw angle of each motors based on measured speed of the motors and the sampling frequency
-def call_motor_angle(f_ech,dxl_io, mode):
-    if mode:
-        #debug_print(dxl_io.get_present_speed({adressMotorLeft})[0])
-        rawDataLeft = dxl_io.get_present_speed({adressMotorLeft})[0] / f_ech
-        rawDataRight = - dxl_io.get_present_speed({adressMotorRight})[0] /  f_ech
-        # debug_print("motor angle")
-        # debug_print(rawDataLeft)
-        # debug_print(rawDataRight)
-        return(rawDataLeft, rawDataRight)
-    else :
-        global previous
-        rawDataLeft = dxl_io.get_present_position({adressMotorLeft})[0] - previous[0]
-        rawDataRight = dxl_io.get_present_position({adressMotorLeft})[0] - previous[1]
-        return(rawDataLeft, - rawDataRight)
+def call_motor_angle(f_ech,dxl_io):
+    #debug_print(dxl_io.get_present_speed({adressMotorLeft})[0])
+    rawDataLeft = dxl_io.get_present_speed({adressMotorLeft})[0] / f_ech
+    rawDataRight = - dxl_io.get_present_speed({adressMotorRight})[0] /  f_ech
+    # debug_print("motor angle")
+    # debug_print(rawDataLeft)
+    # debug_print(rawDataRight)
+    return(rawDataLeft, rawDataRight)
 
 #compute distance and angle change based on wheels variations
 def vect_update(f_ech,dxl_io):
@@ -67,5 +61,4 @@ def update_odom(f_ech,dxl_io):
 def get_odom(f_ech,dxl_io):
     update_odom(f_ech,dxl_io)
     return(XYTHETHA)
-
 
