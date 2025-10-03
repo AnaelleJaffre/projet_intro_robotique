@@ -11,8 +11,8 @@ def debug_print(*args):
         print(*args)
 
 ## geometric parameters
-Rwheels = 25.85 * 0.001; #wheel radius in m
-Drob = 122 * 0.001; #space between both wheels in m
+Rwheels = 25.85  ; #wheel radius in m
+Drob = 122  ; #space between both wheels in m
 
 # control parameters 
 adressMotorLeft = 1
