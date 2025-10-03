@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 
 ## DEBUG ##
-DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+DEBUG = 1 # 1 to enable debug_print 0 to deactivate
 def debug_print(*args):
     if DEBUG:
         print(*args)
@@ -51,10 +51,11 @@ def center_of_zone_butter(img):
     img_rows = img[start:end, :]
 
     splits = np.hsplit(img_rows, width / X_STEP)
+    debug_print(f"number of splits : {len(splits)}")
     avgs = [np.mean(s) for s in splits]
 
-    idx_first_max = np.argmin(avgs)
-    idx_last_max = (len(avgs) - 1 - int(np.argmin(avgs[::-1])))
+    idx_first_max = np.argmax(avgs)
+    idx_last_max = (len(avgs) - 1 - int(np.argmax(avgs[::-1])))
 
     # for i in range(0, width // X_STEP):
     #     mean = compute_mean(img, x, y)
@@ -79,7 +80,7 @@ def center_of_zone_butter(img):
 
 
 if __name__ == '__main__':
-    cap = cv.VideoCapture(2)
+    cap = cv.VideoCapture(0)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, 240)
     win_name = "main"
@@ -91,17 +92,19 @@ if __name__ == '__main__':
 
     # lower = (0, 0, 0)
     # higher = (166, 255, 255)
-    from opencv_inrange_camera_params import BLUE
-    frame_threshold = cv.inRange(frame_HSV, *BLUE)
+    from opencv_inrange_camera_params import RED
+    frame_threshold = cv.inRange(frame_HSV, *RED)
 
     debug_print(center_of_zone_butter(frame_threshold))
 
     line_center_zone_better = center_of_zone_butter(frame_threshold)
     center = frame.shape[0] / 2
-    dx = center - line_center_zone_better
+    dx = line_center_zone_better - center
     debug_print(f"center: {center}")
     debug_print(f"line_center_zone_better: {line_center_zone_better}")
     debug_print(f"dx: {dx}")
 
+    frame_threshold = cv.circle(frame_threshold, (int(line_center_zone_better), 240 - 40), 5, (0, 255, 0), 1)
     cv.imshow(win_name, frame_threshold)
     key = cv.waitKey()
+

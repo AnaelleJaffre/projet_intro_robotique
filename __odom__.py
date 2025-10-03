@@ -9,7 +9,7 @@ import os
 # angles in degrees
 
 ## DEBUG ##
-DEBUG = 0 # 1 to enable debug_print 0 to deactivate
+DEBUG = 1 # 1 to enable debug_print 0 to deactivate
 def debug_print(*args):
     if DEBUG:
         print(*args)
@@ -24,7 +24,7 @@ def main():
     dxl_io.disable_torque({1:0, 2:0})
     while True :
         start = time.perf_counter()
-        os.system('clear')
+        
 
         x, y, theta = odom.get_odom(f_ech, dxl_io)
 
