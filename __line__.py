@@ -7,6 +7,7 @@ from image_processing.shape_detection import center_of_zone, zone_segment_by_hei
 #from step_motors.goto import turn
 from step_motors.goto2 import turn_line
 from step_motors.setup import setup_motors, motors_speed
+from step_motors.odom import get_odom
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
 
@@ -16,14 +17,11 @@ def debug_print(*args):
     if DEBUG:
         print(*args)
 
-
-
 s_color_order = "r", "b", "y"
 color_order = [RED] # [BLUE, YELLOW, RED]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
-PIXEL_TO_MM = 0.3125  # 1 pixel = 0.3125 mm
 CONSTANT_LINEAR_SPEED = 100
 
 class MappingSaver:
@@ -34,10 +32,10 @@ class MappingSaver:
 
     def save(self, xy, offset_angle=0, lateral_error=0):
         now = time.perf_counter()
-        if now - self.last_save > 1:
-            corrected_x = xy[0] - lateral_error * np.sin(offset_angle)
-            corrected_y = xy[1] + lateral_error * np.cos(offset_angle)
-            xy = (corrected_x*1000, corrected_y*1000) # Convert to mm
+        if now - self.last_save > 0.6: # save every 0.6s
+            corrected_x = xy[0]*1000 - lateral_error * np.sin(offset_angle)
+            corrected_y = xy[1]*1000 + lateral_error * np.cos(offset_angle)
+            xy = (corrected_x, corrected_y)
 
             self.robot_poses.append((*xy, s_color_order[current_color]))
             self.last_save = now
@@ -58,7 +56,7 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    # motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -67,12 +65,6 @@ def main():
         if not ret:
             debug_print("could not fetch frame")
             continue
-    
-
-        # save current location in mapping for current color
-        #
-        #mapping_saver.save(odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2])
-
         
         # Convert to HSV and threshold
         frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -83,30 +75,29 @@ def main():
 
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
-        #if cv2.countNonZero(frame_brown) > 0:
-            #current_color += 1
-            #if current_color == 3:
-                # finished doing all paths, stop robot
-                #motors_speed(dxl_io, 0)
-                #break
+        # if cv2.countNonZero(frame_brown) > 0:
+        #     current_color += 1
+        #     if current_color == 3:
+        #         finished doing all paths, stop robot
+        #         motors_speed(dxl_io, 0)
+        #         break
         
         # Get center of zone
 
         center =  frame.shape[0] / 2
 
-        #cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
-        #cv2.imshow("frame", frame)
+        # cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
+        # cv2.imshow("frame", frame)
         # Error angle
         dx = center - line_center_zone_better
         debug_print("dx")
         debug_print(dx)
 
         # Saving position for mapping
-        #lateral_error = PIXEL_TO_MM * lateral_error_pixels  # Conversion pixels -> real distance (to adjust)
-        #robot_xy = odom.get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
-        #mapping_saver.save(robot_xy, line_center, dx)
+        robot_xy = get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
+        mapping_saver.save(robot_xy, line_center, dx)
         
-        #cv2.imshow('frame',frame_threshold)
+        # cv2.imshow('frame',frame_threshold)
         # Adjust motors
         turn_line(dxl_io, dx, 0.25,  0.1) ##dx must be negative for the angular speed to be correct
 
@@ -118,9 +109,8 @@ def main():
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         
-    
     # Mapping
-    #shape_rendering()
+    shape_rendering(mapping_saver.robot_poses)
     
     cap.release()
     debug_print(robot_poses)
