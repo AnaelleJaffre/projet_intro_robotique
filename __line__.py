@@ -2,13 +2,14 @@ import time
 
 import cv2
 import numpy as np
-from image_processing.shape_detection import center_of_zone, zone_segment_by_height, center_of_zone_butter
+from image_processing.shape_detection import center_of_zone_butter, brown_detection
 #from step_motors import odom
 #from step_motors.goto import turn
 from step_motors.goto2 import turn_line
 from step_motors.setup import setup_motors, motors_speed
 from step_motors.odom import get_odom
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
+from image_processing.new_params import NEW_BLUE, NEW_RED, NEW_YELLOW, NEW_BROWN
 from image_processing.shape_rendering import shape_rendering
 import signal
 import sys
@@ -19,8 +20,8 @@ def debug_print(*args):
     if DEBUG:
         print(*args)
 
-s_color_order = "r", "b", "y"
-color_order = [RED] # [BLUE, YELLOW, RED]
+s_color_order = "y", "b", "r"
+color_order = [YELLOW, BLUE, RED]
 current_color = 0
 robot_poses = []
 SAMPLING_FREQ_MS = 0.016
@@ -85,22 +86,23 @@ def main():
         line_center_zone_better = center_of_zone_butter(frame_threshold)
 
         # Brown detection
-        frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
-        blob = cv2.SimpleBlobDetector_create(filterByArea=True, minArea=100)
-        keypoints = blob.detect(frame_brown)
+        frame_brown = cv2.inRange(frame_HSV, NEW_BROWN[0], NEW_BROWN[1])
         
-        # Color Brown detected
-        if keypoints:
-            current_color += 1
+        
+        if(brown_detection(frame_brown, threshold=270)):
+            current_color = (current_color + 1)
+            debug_print(f"Brown detected, current color: {current_color}")
             if current_color == len(color_order):
                 break
-            debug_print(f"Color changed to {s_color_order[current_color]}")
+            
         # Get center of zone
 
         center =  frame.shape[0] / 2
-
+        
+        # Visual Debug
         # cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
         # cv2.imshow("frame", frame)
+        
         # Error angle
         dx = line_center_zone_better - center
         debug_print(f"dx : {dx}")
@@ -111,7 +113,7 @@ def main():
         
         # cv2.imshow('frame',frame_threshold)
         # Adjust motors
-        turn_line(dxl_io, dx, 0.75,  0.1) ##dx must be negative for the angular speed to be correct
+        turn_line(dxl_io, dx, K_cor=0.75,  V0=0.1) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
         print("time: ", elapsed)
@@ -123,10 +125,12 @@ def main():
         
     # Mapping
     shape_rendering(mapping_saver.robot_poses)
+    debug_print(robot_poses)
+    
+    # Cleanup
     dxl_io.set_moving_speed({1:0, 2:0})
     cap.release()
-    debug_print(robot_poses)
-    cv2.destroyAllWindows()
+    #cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     main()

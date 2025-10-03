@@ -62,4 +62,3 @@ def get_odom(f_ech,dxl_io):
     update_odom(f_ech,dxl_io)
     return(XYTHETHA)
 
-

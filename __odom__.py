@@ -24,13 +24,13 @@ def main():
     dxl_io.disable_torque({1:0, 2:0})
     while True :
         start = time.perf_counter()
-        
+
 
         x, y, theta = odom.get_odom(f_ech, dxl_io)
 
         debug_print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         elapsed = time.perf_counter() - start
-        if elapsed > 0.:
+        if elapsed < 1/f_ech:
             time.sleep((1/f_ech) - elapsed)
 
 if __name__ == "__main__":

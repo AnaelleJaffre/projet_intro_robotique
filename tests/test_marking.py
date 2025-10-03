@@ -1,4 +1,8 @@
 import time
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from image_processing.shape_rendering import shape_rendering
 from step_motors import setup, odom
@@ -19,7 +23,7 @@ if __name__ == '__main__':
     t_start = time.time()
     while time.time() - t_start < 10:
         x, y, theta = odom.get_odom(f_ech, dxl_io, 1)
-        rob_poses.append((x * 100, y * 100, "r"))
+        rob_poses.append((x * 1000, y * 1000, "r"))
         debug_print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         time.sleep(1/f_ech)
 
