@@ -41,13 +41,10 @@ def inv_kin(V,O): #V in m/s and O in °/s
 def turn_line(dxl_io, dY, K_cor, V0):
     V_MAX = 0.5
     Omega = K_cor * dY #the more the gap the more the angular correction
-    # try:
-    #     Vlin = min(V_MAX, V0/dY) #the more the gap the less the linear correction, min to cap the lin speed in straight lines
-    # except ZeroDivisionError:
-    #     Vlin = V_MAX
-    Vlin = V0#the more the gap the slower we go
-    # debug_print("Omega ",Omega) 
-    # debug_print("Vlin ", Vlin)
+    #Vlin = np.min(0.1, V0/dY) #the more the gap the less the linear speed, min function to cap Vlin in straight lines
+    Vlin = V0 #the more the gap the slower we go
+    debug_print("Omega ",Omega) 
+    debug_print("Vlin ", Vlin)
 
     SL, SR = inv_kin(Vlin, Omega)
     # debug_print("SL ", SL)
