@@ -86,13 +86,15 @@ def main():
 
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
-        # if cv2.countNonZero(frame_brown) > 0:
-        #     current_color += 1
-        #     if current_color == 3:
-        #         finished doing all paths, stop robot
-        #         motors_speed(dxl_io, 0)
-        #         break
+        blob = cv2.SimpleBlobDetector_create(filterByArea=True, minArea=100)
+        keypoints = blob.detect(frame_brown)
         
+        # Color Brown detected
+        if keypoints:
+            current_color += 1
+            if current_color == len(color_order):
+                break
+            debug_print(f"Color changed to {s_color_order[current_color]}")
         # Get center of zone
 
         center =  frame.shape[0] / 2
@@ -121,7 +123,7 @@ def main():
         
     # Mapping
     shape_rendering(mapping_saver.robot_poses)
-    
+    dxl_io.set_moving_speed({1:0, 2:0})
     cap.release()
     debug_print(robot_poses)
     cv2.destroyAllWindows()
