@@ -51,7 +51,6 @@ def brown_detection(img, threshold):
     img_rows = img[start:end, :]
 
     splits = np.hsplit(img_rows, width / X_STEP)
-    debug_print(f"number of splits : {len(splits)}")
     avgs = [np.mean(s) for s in splits]
     if avgs[0] > threshold:
         return True
