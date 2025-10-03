@@ -24,7 +24,7 @@ def main():
 
    signal.signal(signal.SIGINT, stop_motors)
    while True:
-      goto.asserv([0.1,0.1,0], f_ech, dxl_io, mode)
+      goto.asserv([0.1,0.1,0], f_ech, dxl_io)
       time.sleep(1/f_ech)
 
 if __name__ == '__main__':

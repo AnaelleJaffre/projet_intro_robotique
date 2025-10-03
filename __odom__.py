@@ -26,7 +26,7 @@ def main():
         start = time.perf_counter()
         
 
-        x, y, theta = odom.get_odom(f_ech, dxl_io, mode)
+        x, y, theta = odom.get_odom(f_ech, dxl_io)
 
         debug_print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         elapsed = time.perf_counter() - start
