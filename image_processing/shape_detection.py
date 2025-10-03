@@ -39,6 +39,23 @@ def center_of_zone(img):
         return [img.shape[1] // 2, img.shape[0] // 2]
 
 
+def brown_detection(img, threshold):
+    """compute an average on a hsv turned bitmap to detect a threshold of brown"""
+    X_STEP = 10
+    Y_STEP = 6
+
+    height, width = img.shape
+    start = height - 40
+    end = height - 40 + Y_STEP
+
+    img_rows = img[start:end, :]
+
+    splits = np.hsplit(img_rows, width / X_STEP)
+    debug_print(f"number of splits : {len(splits)}")
+    avgs = [np.mean(s) for s in splits]
+    if avgs[0] > threshold:
+        return True
+    return False
 def center_of_zone_butter(img):
     """compute center of zone using start and end zones"""
     X_STEP = 10

@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Add parent directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from step_motors.goto import turn, move
 from step_motors.goto2 import turn_line
 from step_motors.setup import setup_motors

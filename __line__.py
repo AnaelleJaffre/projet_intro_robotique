@@ -2,7 +2,7 @@ import time
 
 import cv2
 import numpy as np
-from image_processing.shape_detection import center_of_zone, zone_segment_by_height, center_of_zone_butter
+from image_processing.shape_detection import center_of_zone_butter, brown_detection
 #from step_motors import odom
 #from step_motors.goto import turn
 from step_motors.goto2 import turn_line
@@ -86,15 +86,13 @@ def main():
 
         # Brown detection
         frame_brown = cv2.inRange(frame_HSV, BROWN[0], BROWN[1])
-        blob = cv2.SimpleBlobDetector_create(filterByArea=True, minArea=100)
-        keypoints = blob.detect(frame_brown)
         
-        # Color Brown detected
-        if keypoints:
-            current_color += 1
+        
+        if(brown_detection(frame_brown, threshold=100)):
+            current_color = (current_color + 1)
+            debug_print(f"Brown detected, current color: {s_color_order[current_color]}")
             if current_color == len(color_order):
                 break
-            debug_print(f"Color changed to {s_color_order[current_color]}")
         # Get center of zone
 
         center =  frame.shape[0] / 2
