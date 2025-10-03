@@ -8,12 +8,8 @@ from image_processing.opencv_inrange_camera_params import RED
 
 max_value = 255
 max_value_H = 360 // 2
-low_H = 0
-low_S = 0
-low_V = 73
-high_H = 30
-high_S = 161
-high_V = 237
+low_H, low_S, low_V = RED[0]
+high_H, high_S, high_V = RED[1]
 window_capture_name = 'Video Capture'
 window_detection_name = 'Object Detection'
 low_H_name = 'Low H'
@@ -91,7 +87,7 @@ while True:
         break
     frame_HSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
     params = RED
-    frame_threshold = cv.inRange(frame_HSV, *params)
+    frame_threshold = cv.inRange(frame_HSV, (low_H, low_S, low_V), (high_H, high_S, high_V))
 
     cv.imshow(window_capture_name, frame)
     cv.imshow(window_detection_name, frame_threshold)
