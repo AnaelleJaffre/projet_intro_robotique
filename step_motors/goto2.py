@@ -82,8 +82,8 @@ def set_command(error_vector_pos: tuple[float,float],final_angle,dxl_io):
         speedLeft, speedRight = inv_kin(0,last_ang_speed)
         set_speed(dxl_io,[speedLeft,speedRight])
 
-def asserv(target_pos, f_ech, dxl_io):
-    robot_pos = odom.get_odom(f_ech,dxl_io)
+def asserv(target_pos, f_ech, dxl_io, mode):
+    robot_pos = odom.get_odom(f_ech,dxl_io, mode)
     debug_print("robot pos :",robot_pos)
     eps_vect = update_error_vector(robot_pos, target_pos)
     debug_print("eps_vect :",eps_vect)

@@ -14,6 +14,8 @@ def debug_print(*args):
     if DEBUG:
         print(*args)
 
+
+mode = 0 #if mode = 0 then raw angle is tethaK-tethaK-1 if mode = 1 raw angle is omegaMot/f
 f_ech = 10 #Hz
 
 def main():
@@ -24,7 +26,7 @@ def main():
         start = time.perf_counter()
         
 
-        x, y, theta = odom.get_odom(f_ech, dxl_io)
+        x, y, theta = odom.get_odom(f_ech, dxl_io, mode)
 
         debug_print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         elapsed = time.perf_counter() - start
