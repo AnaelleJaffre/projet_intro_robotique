@@ -43,8 +43,20 @@ class MappingSaver:
             self.robot_poses.append((*xy, s_color_order[current_color]))
             self.last_save = now
 
+class TimedChanger:
+    def __init__(self):
+        self.last_change = time.perf_counter()
+    
+    def should_change(self, interval):
+        now = time.perf_counter()
+        if now - self.last_change > interval:
+            self.last_change = now
+            return True
+        return False
+
 
 mapping_saver = MappingSaver()
+timed_changer = TimedChanger()
 
 
 def main():
@@ -89,7 +101,7 @@ def main():
         frame_brown = cv2.inRange(frame_HSV, NEW_BROWN[0], NEW_BROWN[1])
         
         
-        if(brown_detection(frame_brown, threshold=270)):
+        if(brown_detection(frame_brown, threshold=270) and timed_changer.should_change(2.5)):
             current_color = (current_color + 1)
             debug_print(f"Brown detected, current color: {current_color}")
             if current_color == len(color_order):
