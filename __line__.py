@@ -127,7 +127,7 @@ def main():
         
         # cv2.imshow('frame',frame_threshold)
         # Adjust motors
-        turn_line(dxl_io, dx, K_cor=0.75,  V0=0.1) ##dx must be negative for the angular speed to be correct
+        turn_line(dxl_io, dx, K_cor=0.75,  V0=50) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
         print("time: ", elapsed)
