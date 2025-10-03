@@ -23,7 +23,7 @@ satisfactory_area = 0.01 # circle around target in m
 
 # corr parameters
 K_lin = 0.5 #Hz
-K_ang = 0.5 #Hz
+K_ang = 0.75 #Hz
 
 lin_speed = 0
 ang_speed = 0
@@ -89,9 +89,9 @@ def set_command(error_vector_pos: tuple[float, float], final_angle, dxl_io):
         set_speed(dxl_io,[speedLeft,speedRight])
 
 
-def asserv(target_pos, f_ech, dxl_io,mode):
+def asserv(target_pos, f_ech, dxl_io):
     '''Main asserv loop'''
-    robot_pos = odom.get_odom(f_ech,dxl_io,mode)
+    robot_pos = odom.get_odom(f_ech,dxl_io)
     debug_print("robot pos :",robot_pos)
     eps_vect = update_error_vector(robot_pos, target_pos)
     debug_print("eps_vect :",eps_vect)
