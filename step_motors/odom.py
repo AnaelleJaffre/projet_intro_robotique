@@ -19,7 +19,6 @@ adressMotorLeft = 1
 adressMotorRight = 2
 
 ## position
-previous = [0,0]
 XYTHETHA = [0,0,0] # movements along the Y axis 
 
 #compute raw angle of each motors based on measured speed of the motors and the sampling frequency
@@ -39,8 +38,8 @@ def call_motor_angle(f_ech,dxl_io, mode):
         return(rawDataLeft, - rawDataRight)
 
 #compute distance and angle change based on wheels variations
-def vect_update(f_ech,dxl_io, mode):
-    deltaLeft, deltaRight = call_motor_angle(f_ech,dxl_io, mode)
+def vect_update(f_ech,dxl_io):
+    deltaLeft, deltaRight = call_motor_angle(f_ech,dxl_io)
     
     #direct kinematics
     L = Rwheels/2 * (np.deg2rad(deltaRight) + np.deg2rad(deltaLeft))
@@ -51,9 +50,9 @@ def vect_update(f_ech,dxl_io, mode):
     return (L, Tetha)
 
 #add change vector to previous position to get the base position in world frame
-def update_odom(f_ech,dxl_io, mode):
+def update_odom(f_ech,dxl_io):
 
-    l,t = vect_update(f_ech,dxl_io, mode) # in m, in deg
+    l,t = vect_update(f_ech,dxl_io) # in m, in deg
 
     XYTHETHA[2] += t
     #projection from robot frame to world frame
@@ -65,8 +64,8 @@ def update_odom(f_ech,dxl_io, mode):
     XYTHETHA[1] += dY
 
 #function to be called by the rest of the code to get the current estimated position of the base
-def get_odom(f_ech,dxl_io, mode):
-    update_odom(f_ech,dxl_io, mode)
+def get_odom(f_ech,dxl_io):
+    update_odom(f_ech,dxl_io)
     return(XYTHETHA)
 
 

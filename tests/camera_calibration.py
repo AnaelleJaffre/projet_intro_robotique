@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import numpy as np
 import cv2
 from image_processing.new_params import NEW_BLUE, NEW_RED, NEW_YELLOW, NEW_BROWN
