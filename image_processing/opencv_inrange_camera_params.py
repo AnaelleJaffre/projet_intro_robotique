@@ -5,7 +5,7 @@ import numpy as np
 
 # -- OLD
 # RED = (
-#     np.array([0, 152, 155]), # Lows
+#    np.array([0, 152, 155]), # Lows
 #     np.array([7, 200, 236]) # Highs
 # )
 #
@@ -21,14 +21,14 @@ import numpy as np
 # )
 #
 #
-# BROWN = (
-#     np.array([0, 69, 67]), # Lows
-#     np.array([82, 151, 144]) # Highs
-# )
+BROWN = (
+    np.array([0, 69, 67]), # Lows
+    np.array([82, 151, 144]) # Highs
+)
 
 RED = (
     (0, 64, 0),
     (20, 255, 255)
 )
 
-YELLOW, BLUE, BROWN = [None] * 3
+YELLOW, BLUE = [None] * 2

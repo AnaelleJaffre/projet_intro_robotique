@@ -10,6 +10,8 @@ from step_motors.setup import setup_motors, motors_speed
 from step_motors.odom import get_odom
 from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 from image_processing.shape_rendering import shape_rendering
+import signal
+import sys
 
 ## DEBUG ##
 DEBUG = 1 # 1 to enable debug_print 0 to deactivate
@@ -56,7 +58,16 @@ def main():
     
     # Setup motors
     dxl_io = setup_motors()
-    # motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
+    def stop_motors(_, __):
+        dxl_io.set_moving_speed({1:0})
+        dxl_io.set_moving_speed({2:0})
+        dxl_io.disable_torque([1, 2])
+        cap.release()
+        exit(0)
+
+    signal.signal(signal.SIGINT, stop_motors)
+
+    #motors_speed(dxl_io, CONSTANT_LINEAR_SPEED)
     
     while True:
         t_start = time.perf_counter()
@@ -70,7 +81,7 @@ def main():
         frame_HSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         frame_threshold = cv2.inRange(frame_HSV, color_order[current_color][0], color_order[current_color][1])
         
-        line_center = center_of_zone(frame_threshold)
+        #line_center = center_of_zone(frame_threshold)
         line_center_zone_better = center_of_zone_butter(frame_threshold)
 
         # Brown detection
@@ -89,9 +100,8 @@ def main():
         # cv2.circle(frame, line_center, 5, (0, 255, 0), 2)
         # cv2.imshow("frame", frame)
         # Error angle
-        dx = center - line_center_zone_better
-        debug_print("dx")
-        debug_print(dx)
+        dx = line_center_zone_better - center
+        debug_print(f"dx : {dx}")
 
         # Saving position for mapping
         robot_xy = get_odom(SAMPLING_FREQ_MS, dxl_io)[:2]
@@ -99,7 +109,7 @@ def main():
         
         # cv2.imshow('frame',frame_threshold)
         # Adjust motors
-        turn_line(dxl_io, dx, 0.25,  0.1) ##dx must be negative for the angular speed to be correct
+        turn_line(dxl_io, dx, 0.75,  0.1) ##dx must be negative for the angular speed to be correct
 
         elapsed = time.perf_counter() - t_start
         print("time: ", elapsed)
