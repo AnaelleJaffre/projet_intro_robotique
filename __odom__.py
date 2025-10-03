@@ -14,9 +14,7 @@ def debug_print(*args):
     if DEBUG:
         print(*args)
 
-
-f_ech = 100 #sampling frequency in Hz 
-
+f_ech = 10 #Hz
 
 def main():
     #Setup
