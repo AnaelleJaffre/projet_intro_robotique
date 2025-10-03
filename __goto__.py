@@ -10,7 +10,7 @@ import sys
 ## things to remember ##
 # distances in meters
 # angles in degrees
-
+mode = 0 ##if mode = 0 then raw angle is tethaK-tethaK-1 if mode = 1 raw angle is omegaMot/f
 f_ech = 10 #work frequency in Hz
 
 def main():
@@ -24,7 +24,7 @@ def main():
 
    signal.signal(signal.SIGINT, stop_motors)
    while True:
-      goto.asserv([0.1,0.1,0], f_ech, dxl_io)
+      goto.asserv([0.1,0.1,0], f_ech, dxl_io, mode)
       time.sleep(1/f_ech)
 
 if __name__ == '__main__':
