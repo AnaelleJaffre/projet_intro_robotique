@@ -18,7 +18,7 @@ if __name__ == '__main__':
     dxl_io.disable_torque({1:0, 2:0})
     t_start = time.time()
     while time.time() - t_start < 10:
-        x, y, theta = odom.get_odom(f_ech, dxl_io)
+        x, y, theta = odom.get_odom(f_ech, dxl_io, 1)
         rob_poses.append((x * 100, y * 100, "r"))
         debug_print("{:.2f}, {:.2f}, {:.2f}".format(x, y, theta))
         time.sleep(1/f_ech)

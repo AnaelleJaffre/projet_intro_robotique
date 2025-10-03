@@ -1,8 +1,10 @@
 import numpy as np
 import cv2
 from image_processing.new_params import NEW_BLUE, NEW_RED, NEW_YELLOW, NEW_BROWN
+from image_processing.opencv_inrange_camera_params import RED, BLUE, YELLOW, BROWN
 
-def calibrate_color_threshold(cap, preset_low, preset_high, num_samples=50, adjustment_range=10):
+
+def calibrate_color_threshold(cap, preset_low, preset_high, num_samples=10, adjustment_range=30):
     """
     Calibrates color thresholds to maximize line detection under current lighting.
     
@@ -295,16 +297,13 @@ def calibrate_all_colors(cap):
     Calibrates all color thresholds sequentially.
     """
     # Presets
-    RED_PRESET = ((0, 64, 0), (20, 255, 255))
-    YELLOW_PRESET = ((20, 100, 100), (30, 255, 255))
-    BLUE_PRESET = ((100, 100, 100), (130, 255, 255))
-    BROWN_PRESET = ((10, 50, 50), (20, 150, 150))
+    
     
     colors = {
-        'RED': RED_PRESET,
-        'YELLOW': YELLOW_PRESET,
-        'BLUE': BLUE_PRESET,
-        'BROWN': BROWN_PRESET
+        'RED': RED,
+        'YELLOW': YELLOW,
+        'BLUE': BLUE,
+        'BROWN': BROWN
     }
     
     calibrated = {}
